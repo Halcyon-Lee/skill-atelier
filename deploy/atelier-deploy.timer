@@ -1,0 +1,13 @@
+[Unit]
+Description=Poll GitHub and deploy ATELIER
+Requires=atelier-deploy.service
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=2min
+RandomizedDelaySec=15s
+Persistent=true
+Unit=atelier-deploy.service
+
+[Install]
+WantedBy=timers.target

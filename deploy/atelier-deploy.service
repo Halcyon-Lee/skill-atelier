@@ -1,0 +1,17 @@
+[Unit]
+Description=ATELIER auto-deploy from GitHub
+Wants=network-online.target
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/srv/atelier
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/srv/atelier/scripts/auto-deploy.sh
+TimeoutStartSec=1800
+Nice=10
+IOSchedulingClass=best-effort
+
+[Install]
+WantedBy=multi-user.target

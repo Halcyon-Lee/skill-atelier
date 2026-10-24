@@ -137,6 +137,9 @@ src/
   lib/                      数据库、鉴权、会话、验证、查询、种子数据
 data/                       SQLite 数据文件（gitignore）
 scripts/reset-db.mjs        本地数据库重置脚本
+deploy/                     服务器自动部署、备份脚本与 systemd 单元
+Dockerfile                  生产镜像
+docker-compose.yml          单实例应用 + 持久化 SQLite
 ```
 
 ## 数据与内容
@@ -150,13 +153,34 @@ scripts/reset-db.mjs        本地数据库重置脚本
 
 示例技能的来源链接与安装命令为演示内容，正式上线前请替换为你真实维护的技能。示例成员的密码是禁用值，无法登录；他们只用于让档案看起来完整。
 
-## 部署提示
+## 部署
 
-- 必须使用**持久化磁盘**保存 `data/atelier.db`。SQLite 不适合无状态/多实例的 Serverless 部署；推荐 VPS、Fly.io、Railway 或 Docker + volume。
-- 单实例运行，定期备份 `data/atelier.db`（以及服务停止时的 `-wal` / `-shm` 文件）。
-- 设置 `SITE_URL` 为真实域名，并用 HTTPS 反向代理（Caddy / Nginx）。
-- 首次部署前改好 `.env` 中的管理员密码和初始邀请码。
-- 目前没有邮件服务；成员忘记密码时，需要由馆员协助重置（可在服务器侧处理，或后续接入邮件找回）。
+生产形态是一个带持久化磁盘的 Docker 单实例，不能部署到 GitHub Pages，也不适合无状态 Serverless 多实例。完整服务器步骤见 [`deploy/README.md`](deploy/README.md)。
+
+当前实现采用**服务器拉取式自动部署**：
+
+- systemd timer 每 2 分钟检查 GitHub `main` 的提交
+- 只有新提交才下载源码并构建 Docker 镜像
+- 新容器健康检查通过才标记为部署成功，失败自动回滚
+- 每日 SQLite 在线备份 + 每次部署前备份
+- 不需要把服务器 SSH 私钥放进 GitHub Secrets
+
+```bash
+# 构建与本地容器验证（可选）
+docker compose build
+docker compose up -d
+
+# 服务器首次部署 / 手动触发
+/srv/atelier/scripts/auto-deploy.sh
+```
+
+生产注意事项：
+
+- 使用持久化目录保存 `data/atelier.db`，单实例运行。
+- 对外提供服务时使用域名 + HTTPS 反向代理；中国大陆服务器需完成 ICP 备案。
+- 首次部署前在服务器 `/srv/atelier/.env` 设置管理员密码、初始邀请码和 `SITE_URL`。
+- 域名和 HTTPS 就绪后，将 `BIND_ADDRESS` 改为 `127.0.0.1`、`COOKIE_SECURE` 改为 `true`。
+- 目前没有邮件服务；成员忘记密码时需要馆员协助重置。
 
 ## 已验证流程
 
