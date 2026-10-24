@@ -13,7 +13,7 @@ export function RevokeInviteButton({ id, code }: { id: number; code: string }) {
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="text-[9.5px] text-faint transition-colors hover:text-accent-deep"
+        className="text-[12px] text-faint transition-colors hover:text-accent-deep"
       >
         撤回
       </button>
@@ -23,14 +23,14 @@ export function RevokeInviteButton({ id, code }: { id: number; code: string }) {
   return (
     <form action={revokeInviteAction} className="flex items-center gap-1.5">
       <input type="hidden" name="id" value={id} />
-      <span className="text-[9px] text-accent-deep" title={code}>
+      <span className="text-[12px] text-accent-deep" title={code}>
         确认撤回？
       </span>
       <RevokeSubmit />
       <button
         type="button"
         onClick={() => setConfirming(false)}
-        className="text-[9px] text-faint transition-colors hover:text-ink"
+        className="text-[12px] text-faint transition-colors hover:text-ink"
       >
         取消
       </button>
@@ -44,7 +44,7 @@ function RevokeSubmit() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center gap-1 text-[9px] font-medium text-accent-deep hover:underline"
+      className="inline-flex items-center gap-1 text-[12px] font-medium text-accent-deep hover:underline"
     >
       {pending && <LoaderCircle size={9} className="animate-spin" />}
       撤回

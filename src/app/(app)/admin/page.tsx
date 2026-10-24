@@ -118,7 +118,7 @@ export default async function AdminPage({
         <div className="flex h-[58px] items-center justify-between border-b border-line">
           <Link
             href="/library"
-            className="flex items-center gap-1.5 text-[10.5px] text-faint transition-colors hover:text-ink"
+            className="flex items-center gap-1.5 text-[12px] text-faint transition-colors hover:text-ink"
           >
             <ArrowLeft size={12} />
             返回档案馆
@@ -131,7 +131,7 @@ export default async function AdminPage({
 
         {noticeMessage && (
           <div className="animate-rise mt-6 flex items-center justify-between gap-4 border-l-2 border-moss bg-moss/[0.065] px-4 py-3">
-            <p className="flex items-center gap-2 text-[12px] leading-relaxed text-muted">
+            <p className="flex items-center gap-2 text-[14px] leading-relaxed text-muted">
               <CheckCircle2 size={14} className="flex-none text-moss" />
               {noticeMessage}
             </p>
@@ -157,7 +157,7 @@ export default async function AdminPage({
               <h1 className="display-cn mt-5 text-[clamp(48px,6.4vw,82px)] leading-[0.98]">
                 馆务台<span className="text-accent">.</span>
               </h1>
-              <p className="mt-5 max-w-[560px] text-[13px] leading-[1.9] text-muted">
+              <p className="mt-5 max-w-[560px] text-[14px] leading-[1.9] text-muted">
                 掌管邀请与馆藏的地方。签发邀请函、查看成员名录，并确保每一份被收录的技能都仍然值得留在这里。
               </p>
             </div>
@@ -170,11 +170,11 @@ export default async function AdminPage({
               <div className="mt-4 flex items-center gap-2.5 border-t border-line pt-3.5">
                 <Avatar name={user.name} color={user.avatarColor} size="sm" />
                 <div className="min-w-0">
-                  <p className="truncate text-[11px] text-ink">{user.name}</p>
-                  <p className="mt-0.5 truncate text-[9px] text-faint">{user.email}</p>
+                  <p className="truncate text-[12px] text-ink">{user.name}</p>
+                  <p className="mt-0.5 truncate text-[12px] text-faint">{user.email}</p>
                 </div>
               </div>
-              <p className="mt-3 text-[9.5px] leading-[1.7] text-faint">
+              <p className="mt-3 text-[12px] leading-[1.7] text-faint">
                 邀请、精选与删除操作仅对馆员开放。
               </p>
             </div>
@@ -191,8 +191,8 @@ export default async function AdminPage({
                     </p>
                     <Icon size={13} className="text-faint" strokeWidth={1.6} />
                   </div>
-                  <p className="mt-3 text-[10.5px] text-muted">{stat.label}</p>
-                  <p className="mt-0.5 eyebrow text-[7.5px] text-faint">{stat.english}</p>
+                  <p className="mt-3 text-[12px] text-muted">{stat.label}</p>
+                  <p className="mt-0.5 eyebrow text-[12px] text-faint">{stat.english}</p>
                 </div>
               );
             })}
@@ -203,17 +203,17 @@ export default async function AdminPage({
       <nav aria-label="馆务台导航" className="sticky top-[76px] z-30 border-y border-line bg-paper/95 backdrop-blur-md">
         <div className="shell flex h-12 items-center justify-between">
           <div className="flex items-center gap-5">
-            <a href="#invites" className="text-[11px] text-muted transition-colors hover:text-ink">
+            <a href="#invites" className="text-[12px] text-muted transition-colors hover:text-ink">
               邀请函
             </a>
-            <a href="#members" className="text-[11px] text-muted transition-colors hover:text-ink">
+            <a href="#members" className="text-[12px] text-muted transition-colors hover:text-ink">
               成员
             </a>
-            <a href="#skills" className="text-[11px] text-muted transition-colors hover:text-ink">
+            <a href="#skills" className="text-[12px] text-muted transition-colors hover:text-ink">
               馆藏
             </a>
           </div>
-          <span className="hidden items-center gap-1.5 font-mono text-[8.5px] text-faint sm:flex">
+          <span className="hidden items-center gap-1.5 font-mono text-[12px] text-faint sm:flex">
             <ShieldCheck size={10} />
             ADMIN / INVITE-ONLY
           </span>
@@ -237,7 +237,7 @@ export default async function AdminPage({
             <div className="border border-line bg-raised">
               <div className="flex items-center justify-between gap-4 border-b border-line px-4 py-3">
                 <span className="eyebrow text-faint">All invitations</span>
-                <span className="font-mono text-[8.5px] text-faint">
+                <span className="font-mono text-[12px] text-faint">
                   {String(invitations.length).padStart(2, "0")} ISSUED
                 </span>
               </div>
@@ -257,34 +257,36 @@ export default async function AdminPage({
                     >
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <code className="font-mono text-[10.5px] tracking-[0.04em] text-ink">
+                          <code className="font-mono text-[12px] tracking-[0.04em] text-ink">
                             {invite.code}
                           </code>
                           <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
                         </div>
-                        <p className="mt-1.5 truncate text-[9.5px] text-faint">
+                        <p className="mt-1.5 truncate text-[12px] text-faint">
                           {invite.note} · 由 {invite.creator_name} 签发
                         </p>
                       </div>
 
                       <div>
-                        <div className="flex items-center justify-between text-[8px] text-faint">
+                        <div className="flex items-center justify-between text-[12px] text-faint">
                           <span>席位</span>
                           <span className="font-mono">
-                            {invite.used_count}/{invite.max_uses}
+                            {invite.used_count}/{invite.max_uses === 0 ? "不限" : invite.max_uses}
                           </span>
                         </div>
-                        <div className="mt-1.5 h-[3px] w-full bg-sunken">
-                          <div
-                            className={`h-full ${status.tone === "active" ? "bg-moss" : "bg-line-strong"}`}
-                            style={{ width: `${percentage}%` }}
-                          />
-                        </div>
+                        {invite.max_uses > 0 && (
+                          <div className="mt-1.5 h-[3px] w-full bg-sunken">
+                            <div
+                              className={`h-full ${status.tone === "active" ? "bg-moss" : "bg-line-strong"}`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        )}
                       </div>
 
                       <div>
-                        <p className="eyebrow text-[7px] text-faint">Expires</p>
-                        <p className="mt-1 text-[9.5px] text-muted">
+                        <p className="eyebrow text-[12px] text-faint">Expires</p>
+                        <p className="mt-1 text-[12px] text-muted">
                           {invite.expires_at ? formatDate(invite.expires_at) : "永不"}
                         </p>
                       </div>
@@ -294,7 +296,7 @@ export default async function AdminPage({
                           <InviteCopy
                             code={invite.code}
                             label="链接"
-                            className="!text-[9.5px] text-muted hover:text-ink"
+                            className="!text-[12px] text-muted hover:text-ink"
                           />
                         )}
                         {!invite.revoked_at && (
@@ -316,7 +318,7 @@ export default async function AdminPage({
             english="The members"
             description="邀请制意味着每一位成员都值得被记住。这里记录他们的加入时间与贡献。"
             action={
-              <a href="#invites" className="flex items-center gap-1.5 text-[10.5px] text-muted transition-colors hover:text-ink">
+              <a href="#invites" className="flex items-center gap-1.5 text-[12px] text-muted transition-colors hover:text-ink">
                 签发邀请
                 <ArrowUpRight size={12} />
               </a>
@@ -325,10 +327,10 @@ export default async function AdminPage({
 
           <div className="mt-7 border border-line bg-raised">
             <div className="hidden grid-cols-[minmax(0,1.5fr)_110px_110px_90px] gap-4 border-b border-line px-4 py-2.5 sm:grid">
-              <span className="eyebrow text-[7.5px] text-faint">Member</span>
-              <span className="eyebrow text-[7.5px] text-faint">Role</span>
-              <span className="eyebrow text-[7.5px] text-faint">Joined</span>
-              <span className="eyebrow text-right text-[7.5px] text-faint">Contributed</span>
+              <span className="eyebrow text-[12px] text-faint">Member</span>
+              <span className="eyebrow text-[12px] text-faint">Role</span>
+              <span className="eyebrow text-[12px] text-faint">Joined</span>
+              <span className="eyebrow text-right text-[12px] text-faint">Contributed</span>
             </div>
 
             <div className="divide-y divide-line">
@@ -341,33 +343,33 @@ export default async function AdminPage({
                     <Avatar name={member.name} color={member.avatar_color} />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="truncate text-[11.5px] text-ink">{member.name}</p>
-                        <span className="font-mono text-[8px] text-faint">
+                        <p className="truncate text-[12px] text-ink">{member.name}</p>
+                        <span className="font-mono text-[12px] text-faint">
                           #{String(member.id).padStart(3, "0")}
                         </span>
                       </div>
-                      <p className="mt-0.5 truncate text-[9.5px] text-faint">{member.email}</p>
+                      <p className="mt-0.5 truncate text-[12px] text-faint">{member.email}</p>
                     </div>
                   </div>
 
                   <div>
                     {member.role === "admin" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-accent/25 bg-accent-soft/35 px-2 py-1 font-mono text-[8px] tracking-[0.05em] text-accent-deep uppercase">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-accent/25 bg-accent-soft/35 px-2 py-1 font-mono text-[12px] tracking-[0.05em] text-accent-deep uppercase">
                         <ShieldCheck size={9} />
                         Curator
                       </span>
                     ) : (
-                      <span className="inline-flex rounded-full border border-line px-2 py-1 font-mono text-[8px] tracking-[0.05em] text-muted uppercase">
+                      <span className="inline-flex rounded-full border border-line px-2 py-1 font-mono text-[12px] tracking-[0.05em] text-muted uppercase">
                         Member
                       </span>
                     )}
                   </div>
 
-                  <p className="text-[9.5px] text-muted">{formatDate(member.created_at)}</p>
+                  <p className="text-[12px] text-muted">{formatDate(member.created_at)}</p>
 
                   <div className="flex items-center justify-between sm:justify-end">
-                    <span className="font-mono text-[9.5px] text-muted sm:hidden">收录 / 收藏</span>
-                    <p className="font-mono text-[10px] text-ink">
+                    <span className="font-mono text-[12px] text-muted sm:hidden">收录 / 收藏</span>
+                    <p className="font-mono text-[12px] text-ink">
                       {member.skill_count} / {member.bookmark_count}
                     </p>
                   </div>
@@ -384,7 +386,7 @@ export default async function AdminPage({
             english="The collection"
             description="保持馆藏的密度而不是数量。精选会出现在技能库的首页；删除则会永久移除档案。"
             action={
-              <Link href="/submit" className="flex items-center gap-1.5 text-[10.5px] text-muted transition-colors hover:text-ink">
+              <Link href="/submit" className="flex items-center gap-1.5 text-[12px] text-muted transition-colors hover:text-ink">
                 收录新技能
                 <ArrowUpRight size={12} />
               </Link>
@@ -395,12 +397,12 @@ export default async function AdminPage({
             <table className="w-full min-w-[860px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-line">
-                  <th className="px-4 py-3 eyebrow text-[7.5px] font-medium text-faint">Archive</th>
-                  <th className="px-3 py-3 eyebrow text-[7.5px] font-medium text-faint">Category</th>
-                  <th className="px-3 py-3 eyebrow text-[7.5px] font-medium text-faint">Author</th>
-                  <th className="px-3 py-3 eyebrow text-[7.5px] font-medium text-faint">Signals</th>
-                  <th className="px-3 py-3 eyebrow text-[7.5px] font-medium text-faint">Featured</th>
-                  <th className="px-4 py-3 text-right eyebrow text-[7.5px] font-medium text-faint">
+                  <th className="px-4 py-3 eyebrow text-[12px] font-medium text-faint">Archive</th>
+                  <th className="px-3 py-3 eyebrow text-[12px] font-medium text-faint">Category</th>
+                  <th className="px-3 py-3 eyebrow text-[12px] font-medium text-faint">Author</th>
+                  <th className="px-3 py-3 eyebrow text-[12px] font-medium text-faint">Signals</th>
+                  <th className="px-3 py-3 eyebrow text-[12px] font-medium text-faint">Featured</th>
+                  <th className="px-4 py-3 text-right eyebrow text-[12px] font-medium text-faint">
                     Actions
                   </th>
                 </tr>
@@ -412,24 +414,24 @@ export default async function AdminPage({
                     <tr key={skill.id} className="transition-colors hover:bg-paper/45">
                       <td className="max-w-[320px] px-4 py-3.5">
                         <div className="flex items-center gap-2.5">
-                          <span className="font-mono text-[8px] text-faint">
+                          <span className="font-mono text-[12px] text-faint">
                             №{String(skill.id).padStart(3, "0")}
                           </span>
                           <div className="min-w-0">
                             <Link
                               href={`/skills/${skill.slug}`}
-                              className="block truncate text-[11.5px] text-ink transition-colors hover:text-accent-deep"
+                              className="block truncate text-[12px] text-ink transition-colors hover:text-accent-deep"
                             >
                               {skill.name}
                             </Link>
-                            <p className="mt-0.5 truncate font-mono text-[8.5px] text-faint">
+                            <p className="mt-0.5 truncate font-mono text-[12px] text-faint">
                               /{skill.slug} · {formatRelative(skill.created_at)}
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="px-3 py-3.5">
-                        <span className="flex items-center gap-2 text-[9.5px] text-muted">
+                        <span className="flex items-center gap-2 text-[12px] text-muted">
                           <span
                             className="size-[5px] rounded-full"
                             style={{ backgroundColor: category.color }}
@@ -437,9 +439,9 @@ export default async function AdminPage({
                           {category.label}
                         </span>
                       </td>
-                      <td className="px-3 py-3.5 text-[9.5px] text-muted">{skill.author_name}</td>
+                      <td className="px-3 py-3.5 text-[12px] text-muted">{skill.author_name}</td>
                       <td className="px-3 py-3.5">
-                        <span className="font-mono text-[8.5px] text-faint">
+                        <span className="font-mono text-[12px] text-faint">
                           {skill.view_count.toLocaleString("en-US")} views · {skill.bookmark_count} saves
                         </span>
                       </td>
@@ -448,7 +450,7 @@ export default async function AdminPage({
                           <input type="hidden" name="id" value={skill.id} />
                           <button
                             type="submit"
-                            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-1 font-mono text-[8px] tracking-[0.04em] uppercase transition-colors ${
+                            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-1 font-mono text-[12px] tracking-[0.04em] uppercase transition-colors ${
                               skill.featured
                                 ? "border-accent/30 bg-accent-soft/40 text-accent-deep hover:bg-accent-soft/70"
                                 : "border-line text-faint hover:border-line-strong hover:text-ink"
@@ -471,7 +473,7 @@ export default async function AdminPage({
                           <DeleteSkillDialog
                             slug={skill.slug}
                             name={skill.name}
-                            className="!text-[9px]"
+                            className="!text-[12px]"
                           />
                         </div>
                       </td>
@@ -482,7 +484,7 @@ export default async function AdminPage({
             </table>
           </div>
 
-          <div className="mt-5 flex flex-col gap-3 border-t border-line pt-4 text-[9.5px] text-faint sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-5 flex flex-col gap-3 border-t border-line pt-4 text-[12px] text-faint sm:flex-row sm:items-center sm:justify-between">
             <p className="flex items-center gap-2">
               <SparkMark className="size-2.5 text-accent/60" />
               精选会同步出现在成员首页；同一时间可以有多份精选。
@@ -514,13 +516,13 @@ function SectionHeading({
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div className="flex items-start gap-4">
-        <span className="mt-1.5 font-mono text-[9px] tracking-[0.1em] text-accent">{index}</span>
+        <span className="mt-1.5 font-mono text-[12px] tracking-[0.1em] text-accent">{index}</span>
         <div>
           <div className="flex items-baseline gap-3">
             <h2 className="display-cn text-[32px] leading-none text-ink">{title}</h2>
             <span className="eyebrow text-faint">{english}</span>
           </div>
-          <p className="mt-2.5 max-w-[580px] text-[11px] leading-[1.75] text-muted">
+          <p className="mt-2.5 max-w-[580px] text-[12px] leading-[1.75] text-muted">
             {description}
           </p>
         </div>
@@ -545,7 +547,7 @@ function StatusBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 font-mono text-[7.5px] tracking-[0.04em] uppercase ${styles[tone]}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 font-mono text-[12px] tracking-[0.04em] uppercase ${styles[tone]}`}
     >
       <span
         className={`size-1 rounded-full ${

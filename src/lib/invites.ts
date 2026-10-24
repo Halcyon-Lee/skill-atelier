@@ -31,7 +31,7 @@ export function checkInvite(code: string): InviteCheck {
     .prepare(
       `SELECT i.*, u.name AS creator_name
        FROM invites i JOIN users u ON u.id = i.created_by
-       WHERE i.code = ?`,
+       WHERE i.code = ? COLLATE NOCASE`,
     )
     .get(normalized) as InviteRow | undefined;
 
@@ -40,7 +40,7 @@ export function checkInvite(code: string): InviteCheck {
   if (row.expires_at && new Date(row.expires_at).getTime() <= Date.now()) {
     return { valid: false, reason: "expired" };
   }
-  if (row.used_count >= row.max_uses) return { valid: false, reason: "exhausted" };
+  if (row.max_uses > 0 && row.used_count >= row.max_uses) return { valid: false, reason: "exhausted" };
 
   return { valid: true, invite: row };
 }
@@ -66,6 +66,6 @@ export function getInviteStatus(invite: InviteRow): {
   if (invite.expires_at && new Date(invite.expires_at).getTime() <= Date.now()) {
     return { label: "已过期", tone: "closed" };
   }
-  if (invite.used_count >= invite.max_uses) return { label: "已用尽", tone: "muted" };
+  if (invite.max_uses > 0 && invite.used_count >= invite.max_uses) return { label: "已用尽", tone: "muted" };
   return { label: "有效", tone: "active" };
 }

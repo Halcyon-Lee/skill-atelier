@@ -33,7 +33,7 @@ export function ProfileSettings({
       {state.error && (
         <p
           role="alert"
-          className="flex items-start gap-2 border-l-2 border-accent bg-accent-soft/45 px-3 py-2 text-[11.5px] leading-relaxed text-accent-deep"
+          className="flex items-start gap-2 border-l-2 border-danger bg-danger-soft px-3 py-2 text-[12px] leading-relaxed text-danger"
         >
           <AlertCircle size={13} className="mt-0.5 flex-none" />
           {state.error}
@@ -85,7 +85,7 @@ export function ProfileSettings({
       </div>
 
       <div className="flex items-center justify-between gap-4 pt-1">
-        <p className="text-[10px] text-faint">邮箱修改请联系馆员。</p>
+        <p className="text-[12px] text-faint">邮箱修改请联系馆员。</p>
         <button type="submit" disabled={pending} className="btn btn-primary btn-sm">
           {pending ? <LoaderCircle size={13} className="animate-spin" /> : <Check size={13} />}
           {pending ? "保存中" : "保存资料"}
@@ -112,7 +112,7 @@ export function PasswordSettings() {
       {state.error && (
         <p
           role="alert"
-          className="flex items-start gap-2 border-l-2 border-accent bg-accent-soft/45 px-3 py-2 text-[11.5px] leading-relaxed text-accent-deep"
+          className="flex items-start gap-2 border-l-2 border-danger bg-danger-soft px-3 py-2 text-[12px] leading-relaxed text-danger"
         >
           <AlertCircle size={13} className="mt-0.5 flex-none" />
           {state.error}
@@ -156,7 +156,7 @@ export function PasswordSettings() {
       </div>
 
       <div className="flex items-center justify-between gap-4 pt-1">
-        <p className="text-[10px] leading-relaxed text-faint">修改后，其他设备上的会话会失效。</p>
+        <p className="text-[12px] leading-relaxed text-faint">修改后，其他设备上的会话会失效。</p>
         <button type="submit" disabled={pending} className="btn btn-outline btn-sm">
           {pending ? <LoaderCircle size={13} className="animate-spin" /> : null}
           {pending ? "更新中" : "更新密码"}

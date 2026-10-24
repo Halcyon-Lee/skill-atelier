@@ -19,11 +19,11 @@ export async function GET(request: Request) {
     .prepare(
       `SELECT slug, name, tagline, category
        FROM skills
-       WHERE name LIKE ? ESCAPE '\\' OR tagline LIKE ? ESCAPE '\\' OR tags LIKE ? ESCAPE '\\' OR description LIKE ? ESCAPE '\\'
+       WHERE name LIKE ? ESCAPE '\\' OR tagline LIKE ? ESCAPE '\\' OR tags LIKE ? ESCAPE '\\' OR description LIKE ? ESCAPE '\\' OR use_cases LIKE ? ESCAPE '\\'
        ORDER BY view_count DESC, created_at DESC
        LIMIT 6`,
     )
-    .all(like, like, like, like) as unknown as Array<{
+    .all(like, like, like, like, like) as unknown as Array<{
     slug: string;
     name: string;
     tagline: string;

@@ -162,12 +162,12 @@ export function CommandSearch() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="搜索技能档案"
-        className="group flex h-9 items-center gap-2 rounded-[2px] border border-line bg-raised/40 px-2.5 text-muted transition-colors hover:border-line-strong hover:text-ink sm:px-3"
+        className="group flex h-9 items-center gap-2 rounded-lg border border-line bg-raised/40 px-2.5 text-muted transition-colors hover:border-line-strong hover:text-ink sm:px-3"
       >
         <Search size={14} strokeWidth={1.8} />
-        <span className="hidden text-[11.5px] sm:inline">搜索</span>
-        <kbd className="ml-1 hidden items-center gap-0.5 rounded-[2px] border border-line bg-paper px-1.5 py-0.5 font-mono text-[8.5px] text-faint md:inline-flex">
-          <span className="text-[10px]">⌘</span>K
+        <span className="hidden text-[12px] sm:inline">搜索</span>
+        <kbd className="ml-1 hidden items-center gap-0.5 rounded-lg border border-line bg-paper px-1.5 py-0.5 font-mono text-[12px] text-faint md:inline-flex">
+          <span className="text-[12px]">⌘</span>K
         </kbd>
       </button>
 
@@ -183,7 +183,7 @@ export function CommandSearch() {
             if (event.target === event.currentTarget) close();
           }}
         >
-          <div className="animate-rise w-full max-w-[600px] overflow-hidden rounded-[3px] border border-line bg-raised shadow-[0_40px_100px_-30px_rgba(18,15,10,0.55)]">
+          <div className="animate-rise w-full max-w-[600px] overflow-hidden rounded-xl border border-line bg-raised shadow-[0_40px_100px_-30px_rgba(18,15,10,0.55)]">
             <div className="flex items-center gap-3 border-b border-line px-5">
               <Search size={17} className="flex-none text-faint" strokeWidth={1.8} />
               <input
@@ -198,7 +198,7 @@ export function CommandSearch() {
                     setLoading(false);
                   }
                 }}
-                placeholder="搜索技能、标签或一句话介绍…"
+                placeholder="搜索技能、标签或使用场景…"
                 aria-label="搜索关键词"
                 className="h-[58px] min-w-0 flex-1 bg-transparent text-[14px] text-ink outline-none placeholder:text-faint"
               />
@@ -207,7 +207,7 @@ export function CommandSearch() {
                 type="button"
                 onClick={close}
                 aria-label="关闭搜索"
-                className="flex size-7 flex-none items-center justify-center rounded-[2px] border border-line text-faint transition-colors hover:text-ink"
+                className="flex size-11 flex-none items-center justify-center rounded-lg border border-line text-faint transition-colors hover:text-ink"
               >
                 <X size={12} />
               </button>
@@ -226,18 +226,18 @@ export function CommandSearch() {
                           onClick={() => goToSkill(result.slug)}
                           onMouseEnter={() => setSelected(index)}
                           className={cn(
-                            "flex w-full items-center gap-3 rounded-[2px] px-2.5 py-3 text-left transition-colors",
+                            "flex w-full items-center gap-3 rounded-lg px-2.5 py-3 text-left transition-colors",
                             index === selected ? "bg-sunken/70" : "hover:bg-sunken/50",
                           )}
                         >
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <span className="text-[13.5px] font-medium text-ink">{result.name}</span>
-                              <span className="tag-pill !h-[20px] !px-2 !text-[8.5px]">
+                              <span className="text-[14px] font-medium text-ink">{result.name}</span>
+                              <span className="tag-pill !h-[20px] !px-2 !text-[12px]">
                                 {result.category}
                               </span>
                             </div>
-                            <p className="mt-1 line-clamp-1 text-[11.5px] text-muted">
+                            <p className="mt-1 line-clamp-1 text-[12px] text-muted">
                               {result.tagline}
                             </p>
                           </div>
@@ -247,10 +247,10 @@ export function CommandSearch() {
                       <button
                         type="button"
                         onClick={goToSearch}
-                        className="mt-1 flex w-full items-center justify-between border-t border-line px-2.5 pt-3 pb-2 text-[11px] text-muted transition-colors hover:text-ink"
+                        className="mt-1 flex w-full items-center justify-between border-t border-line px-2.5 pt-3 pb-2 text-[12px] text-muted transition-colors hover:text-ink"
                       >
                         查看全部结果
-                        <span className="flex items-center gap-1 font-mono text-[9px] text-faint">
+                        <span className="flex items-center gap-1 font-mono text-[12px] text-faint">
                           回车 <CornerDownLeft size={11} />
                         </span>
                       </button>
@@ -258,11 +258,11 @@ export function CommandSearch() {
                   ) : (
                     <div className="px-3 py-10 text-center">
                       {loading ? (
-                        <p className="text-[12px] text-faint">正在档案中翻找…</p>
+                        <p className="text-[14px] text-faint">正在档案中翻找…</p>
                       ) : (
                         <>
                           <p className="font-display text-[24px] text-ink">没有找到这份档案。</p>
-                          <p className="mt-2 text-[11.5px] text-muted">
+                          <p className="mt-2 text-[12px] text-muted">
                             换个关键词，或按回车浏览全部收录。
                           </p>
                         </>
@@ -279,14 +279,14 @@ export function CommandSearch() {
                         key={category.slug}
                         href={`/library?category=${category.slug}`}
                         onClick={close}
-                        className="inline-flex items-center gap-2 rounded-[2px] border border-line px-2.5 py-2 text-[11px] text-muted transition-colors hover:border-ink/30 hover:text-ink"
+                        className="inline-flex items-center gap-2 rounded-lg border border-line px-2.5 py-2 text-[12px] text-muted transition-colors hover:border-ink/30 hover:text-ink"
                       >
                         <span
                           className="size-1.5 rounded-full"
                           style={{ backgroundColor: category.color }}
                         />
                         {category.label}
-                        <span className="font-mono text-[8.5px] text-faint">
+                        <span className="font-mono text-[12px] text-faint">
                           {category.english}
                         </span>
                       </Link>
@@ -297,7 +297,7 @@ export function CommandSearch() {
                     <Link
                       href="/library"
                       onClick={close}
-                      className="group flex items-center justify-between rounded-[2px] px-2 py-2 text-[11.5px] text-muted transition-colors hover:bg-sunken/50 hover:text-ink"
+                      className="group flex items-center justify-between rounded-lg px-2 py-2 text-[12px] text-muted transition-colors hover:bg-sunken/50 hover:text-ink"
                     >
                       浏览全部档案
                       <ArrowRight size={12} />
@@ -305,22 +305,22 @@ export function CommandSearch() {
                     <Link
                       href="/submit"
                       onClick={close}
-                      className="group flex items-center justify-between rounded-[2px] px-2 py-2 text-[11.5px] text-muted transition-colors hover:bg-sunken/50 hover:text-ink"
+                      className="group flex items-center justify-between rounded-lg px-2 py-2 text-[12px] text-muted transition-colors hover:bg-sunken/50 hover:text-ink"
                     >
                       收录一份技能
                       <ArrowRight size={12} />
                     </Link>
                   </div>
 
-                  <p className="mt-4 flex items-center gap-2 px-2 text-[9.5px] text-faint">
+                  <p className="mt-4 flex items-center gap-2 px-2 text-[12px] text-faint">
                     <span className="flex items-center gap-0.5">
-                      <kbd className="rounded-[2px] border border-line px-1 font-mono">↑</kbd>
-                      <kbd className="rounded-[2px] border border-line px-1 font-mono">↓</kbd>
+                      <kbd className="rounded-lg border border-line px-1 font-mono">↑</kbd>
+                      <kbd className="rounded-lg border border-line px-1 font-mono">↓</kbd>
                     </span>
                     选择
-                    <kbd className="rounded-[2px] border border-line px-1 font-mono">↵</kbd>
+                    <kbd className="rounded-lg border border-line px-1 font-mono">↵</kbd>
                     打开
-                    <kbd className="rounded-[2px] border border-line px-1 font-mono">esc</kbd>
+                    <kbd className="rounded-lg border border-line px-1 font-mono">esc</kbd>
                     关闭
                   </p>
                 </div>

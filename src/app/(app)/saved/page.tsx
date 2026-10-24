@@ -19,7 +19,7 @@ export default async function SavedPage() {
       <div className="flex h-[58px] items-center justify-between border-b border-line">
         <Link
           href="/library"
-          className="flex items-center gap-1.5 text-[10.5px] text-faint transition-colors hover:text-ink"
+          className="flex items-center gap-1.5 text-[12px] text-faint transition-colors hover:text-ink"
         >
           <ArrowLeft size={12} />
           返回档案馆
@@ -36,7 +36,7 @@ export default async function SavedPage() {
           <h1 className="display-cn mt-5 text-[clamp(48px,6.2vw,80px)] leading-[0.98]">
             留给以后<span className="text-accent">。</span>
           </h1>
-          <p className="mt-5 max-w-[500px] text-[13px] leading-[1.9] text-muted">
+          <p className="mt-5 max-w-[500px] text-[14px] leading-[1.9] text-muted">
             被你亲手留下的工具，会在这里安静地排队。等下一次需要它们的时候再来翻阅。
           </p>
         </div>
@@ -73,7 +73,7 @@ export default async function SavedPage() {
             <div className="relative">
               <SparkMark className="mx-auto size-7 text-accent/50" />
               <h2 className="display-cn mt-5 text-[32px] text-ink">你的收藏夹还是空的。</h2>
-              <p className="mx-auto mt-3 max-w-[340px] text-[12px] leading-[1.8] text-muted">
+              <p className="mx-auto mt-3 max-w-[340px] text-[14px] leading-[1.8] text-muted">
                 在档案页点击「收藏」，把那些值得留在手边的工具放到这里。
               </p>
               <Link href="/library" className="btn btn-primary btn-sm mt-7">

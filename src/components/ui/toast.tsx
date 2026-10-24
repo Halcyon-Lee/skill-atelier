@@ -78,24 +78,24 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <div
               key={item.id}
               role="status"
-              className="animate-rise pointer-events-auto flex items-center gap-3 rounded-[2px] border border-dark-line bg-dark px-3.5 py-3 text-cream shadow-[0_18px_45px_-22px_rgba(0,0,0,0.7)]"
+              className="animate-rise pointer-events-auto flex items-center gap-3 rounded-lg border border-dark-line bg-dark px-3.5 py-3 text-cream shadow-[0_18px_45px_-22px_rgba(0,0,0,0.7)]"
             >
               <span
                 className={`flex size-5 flex-none items-center justify-center rounded-full ${
                   item.tone === "error"
-                    ? "bg-accent text-white"
+                    ? "bg-danger text-on-danger"
                     : item.tone === "info"
                       ? "bg-cream/15 text-cream"
-                      : "bg-[#d7e5cf] text-[#1f331d]"
+                      : "bg-accent text-on-accent"
                 }`}
               >
                 <Icon size={12} strokeWidth={2.4} />
               </span>
-              <p className="min-w-0 flex-1 text-[12.5px] leading-[1.5]">{item.message}</p>
+              <p className="min-w-0 flex-1 text-[14px] leading-[1.5]">{item.message}</p>
               <button
                 type="button"
                 onClick={() => dismiss(item.id)}
-                className="flex size-6 flex-none items-center justify-center text-cream/45 transition-colors hover:text-cream"
+                className="flex size-6 flex-none items-center justify-center text-muted transition-colors hover:text-cream"
                 aria-label="关闭提示"
               >
                 <X size={13} />

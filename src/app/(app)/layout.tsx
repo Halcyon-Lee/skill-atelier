@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { requireUser } from "@/lib/auth";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { VideoFooter } from "@/components/video/shell";
+import { VideoHeader } from "@/components/video/shell";
 
 export const metadata: Metadata = {
   robots: {
@@ -11,28 +11,21 @@ export const metadata: Metadata = {
 };
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const user = await requireUser();
+  await requireUser();
 
   return (
     <div className="flex min-h-dvh flex-col">
       <a
         href="#main-content"
-        className="sr-only z-[300] focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:inline-flex focus:h-10 focus:items-center focus:bg-ink focus:px-4 focus:text-[12px] focus:text-cream"
+        className="sr-only z-[300] focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:inline-flex focus:h-10 focus:items-center focus:bg-accent focus:px-4 focus:text-[14px] focus:text-on-accent"
       >
         跳到主要内容
       </a>
-      <SiteHeader
-        user={{
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          avatarColor: user.avatarColor,
-        }}
-      />
+      <VideoHeader />
       <main id="main-content" className="flex-1">
         {children}
       </main>
-      <SiteFooter />
+      <VideoFooter />
     </div>
   );
 }

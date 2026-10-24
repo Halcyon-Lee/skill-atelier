@@ -22,7 +22,7 @@ export function InviteManager() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="display-cn text-[24px] leading-none text-ink">签发邀请</h3>
-          <p className="mt-2 text-[10.5px] leading-relaxed text-faint">
+          <p className="mt-2 text-[12px] leading-relaxed text-faint">
             每张邀请函都有独立席位与有效期，可随时撤销。
           </p>
         </div>
@@ -35,7 +35,7 @@ export function InviteManager() {
         {state.error && (
           <p
             role="alert"
-            className="flex items-start gap-2 border-l-2 border-accent bg-accent-soft/45 px-3 py-2 text-[11px] leading-relaxed text-accent-deep"
+            className="flex items-start gap-2 border-l-2 border-danger bg-danger-soft px-3 py-2 text-[12px] leading-relaxed text-danger"
           >
             <AlertCircle size={13} className="mt-0.5 flex-none" />
             {state.error}
@@ -51,7 +51,7 @@ export function InviteManager() {
             name="note"
             maxLength={80}
             placeholder="给谁的邀请？例如：设计团队"
-            className="field !min-h-[44px] !text-[12px]"
+            className="field !min-h-[44px] !text-[14px]"
           />
         </div>
 
@@ -68,7 +68,7 @@ export function InviteManager() {
               max={100}
               defaultValue={1}
               required
-              className="field !min-h-[44px] !text-[12px]"
+              className="field !min-h-[44px] !text-[14px]"
             />
           </div>
           <div>
@@ -79,7 +79,7 @@ export function InviteManager() {
               id="invite-expiry"
               name="expiresDays"
               defaultValue="30"
-              className="field !min-h-[44px] !text-[12px]"
+              className="field !min-h-[44px] !text-[14px]"
             >
               <option value="7">7 天</option>
               <option value="30">30 天</option>
@@ -105,7 +105,7 @@ export function InviteManager() {
           <p className="input-code mt-3 font-mono text-[17px] tracking-[0.1em] text-ink">
             {state.created.code}
           </p>
-          <p className="mt-1.5 text-[9.5px] text-faint">
+          <p className="mt-1.5 text-[12px] text-faint">
             {state.created.maxUses} 个席位 ·{" "}
             {state.created.expiresAt
               ? `${new Date(state.created.expiresAt).toLocaleDateString("zh-CN")} 到期`
@@ -129,7 +129,7 @@ export function InviteManager() {
             />
           </div>
           {inviteLink && (
-            <p className="mt-2 truncate font-mono text-[8.5px] text-faint">{inviteLink}</p>
+            <p className="mt-2 truncate font-mono text-[12px] text-faint">{inviteLink}</p>
           )}
         </div>
       )}

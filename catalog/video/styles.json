@@ -1,0 +1,112 @@
+[
+  {
+    "slug": "dark-keynote",
+    "name": "暗色科技发布",
+    "english": "Dark Tech Keynote",
+    "category": "产品发布",
+    "description": "用克制的光影、产品界面与节奏鲜明的镜头，讲清一个新想法。",
+    "uses": [
+      "产品介绍",
+      "功能发布",
+      "品牌短片"
+    ],
+    "film": "Room to Think",
+    "sampleDuration": 42.0,
+    "poster": "/video-posters/dark-keynote.jpg",
+    "sampleUrl": "https://github.com/lemomo-ai/lemo-opuscar/releases/download/films/dark-keynote.mp4",
+    "sourceUrl": "https://github.com/lemomo-ai/lemo-opuscar/tree/413a6bd6d78ebd3bdd5abaec9538a26867f890df/styles/dark-keynote",
+    "sourceCommit": "413a6bd6d78ebd3bdd5abaec9538a26867f890df",
+    "renderer": null,
+    "credit": "LemoLab",
+    "license": "CC BY 4.0",
+    "collectedBy": "带熊猫去竹林"
+  },
+  {
+    "slug": "swiss-motion",
+    "name": "瑞士动态排版",
+    "english": "Swiss Motion Graphics",
+    "category": "图形动效",
+    "description": "让文字、网格与几何图形跟着节拍，成为叙事的主角。",
+    "uses": [
+      "活动宣传",
+      "品牌表达",
+      "观点分享"
+    ],
+    "film": "Five Rules for a Poster",
+    "sampleDuration": 44.0,
+    "poster": "/video-posters/swiss-motion.jpg",
+    "sampleUrl": "https://github.com/lemomo-ai/lemo-opuscar/releases/download/films/swiss-motion.mp4",
+    "sourceUrl": "https://github.com/lemomo-ai/lemo-opuscar/tree/413a6bd6d78ebd3bdd5abaec9538a26867f890df/styles/swiss-motion",
+    "sourceCommit": "413a6bd6d78ebd3bdd5abaec9538a26867f890df",
+    "renderer": "swiss-v1",
+    "credit": "LemoLab",
+    "license": "CC BY 4.0",
+    "collectedBy": "带熊猫去竹林"
+  },
+  {
+    "slug": "ink-wash",
+    "name": "中国水墨",
+    "english": "Chinese Ink Wash",
+    "category": "东方美学",
+    "description": "以宣纸留白、墨色层次与流动笔触，展开一段有余韵的故事。",
+    "uses": [
+      "文化故事",
+      "诗意叙事",
+      "节日心意"
+    ],
+    "film": "The Swordsman and the River",
+    "sampleDuration": 48.0,
+    "poster": "/video-posters/ink-wash.jpg",
+    "sampleUrl": "https://github.com/lemomo-ai/lemo-opuscar/releases/download/films/ink-wash.mp4",
+    "sourceUrl": "https://github.com/lemomo-ai/lemo-opuscar/tree/413a6bd6d78ebd3bdd5abaec9538a26867f890df/styles/ink-wash",
+    "sourceCommit": "413a6bd6d78ebd3bdd5abaec9538a26867f890df",
+    "renderer": null,
+    "credit": "LemoLab",
+    "license": "CC BY 4.0",
+    "collectedBy": "带熊猫去竹林"
+  },
+  {
+    "slug": "crayon-book",
+    "name": "蜡笔儿童绘本",
+    "english": "Crayon Picture Book",
+    "category": "手绘故事",
+    "description": "把小小的想象画进温暖的蜡笔世界，让故事慢慢发生。",
+    "uses": [
+      "儿童故事",
+      "知识启蒙",
+      "生活记录"
+    ],
+    "film": "The Moon Can't Sleep",
+    "sampleDuration": 52.0,
+    "poster": "/video-posters/crayon-book.jpg",
+    "sampleUrl": "https://github.com/lemomo-ai/lemo-opuscar/releases/download/films/crayon-book.mp4",
+    "sourceUrl": "https://github.com/lemomo-ai/lemo-opuscar/tree/413a6bd6d78ebd3bdd5abaec9538a26867f890df/styles/crayon-book",
+    "sourceCommit": "413a6bd6d78ebd3bdd5abaec9538a26867f890df",
+    "renderer": null,
+    "credit": "LemoLab",
+    "license": "CC BY 4.0",
+    "collectedBy": "带熊猫去竹林"
+  },
+  {
+    "slug": "pixel-rpg",
+    "name": "16-bit 像素 RPG",
+    "english": "16-bit Pixel RPG",
+    "category": "像素世界",
+    "description": "用像素场景、角色与游戏叙事，带观众走进一段冒险。",
+    "uses": [
+      "游戏叙事",
+      "创意短片",
+      "成长回顾"
+    ],
+    "film": "The Last Save Point",
+    "sampleDuration": 54.5,
+    "poster": "/video-posters/pixel-rpg.jpg",
+    "sampleUrl": "https://github.com/lemomo-ai/lemo-opuscar/releases/download/films/pixel-rpg.mp4",
+    "sourceUrl": "https://github.com/lemomo-ai/lemo-opuscar/tree/413a6bd6d78ebd3bdd5abaec9538a26867f890df/styles/pixel-rpg",
+    "sourceCommit": "413a6bd6d78ebd3bdd5abaec9538a26867f890df",
+    "renderer": null,
+    "credit": "LemoLab",
+    "license": "CC BY 4.0",
+    "collectedBy": "带熊猫去竹林"
+  }
+]

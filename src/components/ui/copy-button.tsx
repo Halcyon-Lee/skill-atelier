@@ -69,7 +69,7 @@ export function CopyButton({
       onClick={handleCopy}
       aria-label={copied ? copiedLabel : label}
       className={cn(
-        "inline-flex items-center justify-center gap-1.5 text-[11px] transition-colors",
+        "inline-flex items-center justify-center gap-1.5 text-[12px] transition-colors",
         className,
       )}
     >

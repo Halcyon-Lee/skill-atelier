@@ -1,32 +1,30 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
   title: {
-    default: "ATELIER · 私人技能档案馆",
+    default: "ATELIER · AI 视频创作",
     template: "%s · ATELIER",
   },
   description:
-    "一个只对受邀者开放的 AI Agent Skill 档案馆。收藏、讨论并分享那些真正值得留在工具箱里的技能。",
+    "选一种喜欢的视频风格，写下你的脚本，让想法成为影片。",
   applicationName: "ATELIER",
   authors: [{ name: "ATELIER" }],
   openGraph: {
-    title: "ATELIER · 私人技能档案馆",
-    description: "一个只对受邀者开放的 AI Agent Skill 档案馆。",
+    title: "ATELIER · AI 视频创作",
+    description: "精选视频风格，用自己的脚本创作属于你的影片。",
     type: "website",
     locale: "zh_CN",
     siteName: "ATELIER",
   },
   twitter: {
     card: "summary",
-    title: "ATELIER · 私人技能档案馆",
-    description: "一个只对受邀者开放的 AI Agent Skill 档案馆。",
+    title: "ATELIER · AI 视频创作",
+    description: "精选视频风格，用自己的脚本创作属于你的影片。",
   },
   robots: {
     index: false,
@@ -37,8 +35,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#f2ede3",
-  colorScheme: "light",
+  themeColor: "#070a08",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

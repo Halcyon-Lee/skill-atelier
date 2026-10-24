@@ -14,6 +14,7 @@ import { BookmarkButton } from "@/components/library/bookmark-button";
 import { DeleteSkillDialog } from "@/components/library/delete-skill-dialog";
 import { SkillCard } from "@/components/library/skill-card";
 import { ViewPing } from "@/components/library/view-ping";
+import { SkillShowcase } from "@/components/library/skill-showcase";
 import { Markdown } from "@/components/markdown";
 import { CopyButton } from "@/components/ui/copy-button";
 import { requireUser } from "@/lib/auth";
@@ -59,7 +60,7 @@ export default async function SkillDetailPage({
       {notice && (
         <div className="shell pt-6">
           <div className="animate-rise flex items-center justify-between gap-4 border-l-2 border-moss bg-moss/[0.065] px-4 py-3">
-            <p className="text-[12px] leading-relaxed text-muted">
+            <p className="text-[14px] leading-relaxed text-muted">
               <span className="font-medium text-ink">
                 {notice === "created" ? "档案已收录。" : "档案已更新。"}
               </span>{" "}
@@ -80,10 +81,10 @@ export default async function SkillDetailPage({
 
       <div className="shell">
         <div className="flex h-[58px] items-center justify-between gap-4 border-b border-line">
-          <nav aria-label="面包屑" className="flex min-w-0 items-center gap-2 text-[10.5px] text-faint">
+          <nav aria-label="面包屑" className="flex min-w-0 items-center gap-2 text-[12px] text-faint">
             <Link href="/library" className="flex items-center gap-1.5 transition-colors hover:text-ink">
               <ArrowLeft size={12} />
-              档案馆
+              技能库
             </Link>
             <ChevronRight size={10} className="text-line-strong" />
             <Link
@@ -100,7 +101,7 @@ export default async function SkillDetailPage({
             {canEdit && (
               <Link
                 href={`/skills/${skill.slug}/edit`}
-                className="flex items-center gap-1.5 text-[10.5px] text-muted transition-colors hover:text-ink"
+                className="flex items-center gap-1.5 text-[12px] text-muted transition-colors hover:text-ink"
               >
                 <PencilLine size={11} />
                 编辑
@@ -124,17 +125,17 @@ export default async function SkillDetailPage({
             <span className="hidden h-3 w-px bg-line sm:block" />
             <span className="eyebrow text-faint">Updated {formatRelative(skill.updatedAt)}</span>
             <span className="hidden h-3 w-px bg-line sm:block" />
-            <span className="flex items-center gap-1.5 font-mono text-[9px] text-faint">
+            <span className="flex items-center gap-1.5 font-mono text-[12px] text-faint">
               <Eye size={11} strokeWidth={1.7} />
               {skill.viewCount.toLocaleString("en-US")}
             </span>
           </div>
 
-          <h1 className="display-cn mt-5 max-w-[950px] text-[clamp(52px,7.4vw,94px)] leading-[0.98] text-balance">
+          <h1 className="display-cn mt-5 max-w-[950px] text-[clamp(36px,5.7vw,72px)] leading-[1.12] text-balance">
             {skill.name}
             <span className="text-accent">.</span>
           </h1>
-          <p className="mt-6 max-w-[740px] text-[14.5px] leading-[1.9] text-muted text-pretty">
+          <p className="mt-6 max-w-[740px] text-base leading-[1.85] text-muted text-pretty">
             {skill.tagline}
           </p>
 
@@ -142,10 +143,10 @@ export default async function SkillDetailPage({
             <div className="flex items-center gap-3">
               <Avatar name={skill.author.name} color={skill.author.color} />
               <div>
-                <p className="text-[11.5px] text-ink">
+                <p className="text-[12px] text-ink">
                   由 <span className="font-medium">{skill.author.name}</span> 收录
                 </p>
-                <p className="mt-0.5 font-mono text-[9px] text-faint">
+                <p className="mt-0.5 font-mono text-[12px] text-faint">
                   {formatDate(skill.createdAt)} · VERSION {skill.version}
                 </p>
               </div>
@@ -167,14 +168,15 @@ export default async function SkillDetailPage({
 
         <div className="grid gap-12 border-t border-line pt-11 lg:grid-cols-[minmax(0,1fr)_334px] lg:gap-16 lg:pt-14">
           <article className="min-w-0">
+            <SkillShowcase skill={skill} />
             <Markdown content={skill.description} />
 
             <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
               <div className="flex items-center gap-3">
                 <Avatar name={skill.author.name} color={skill.author.color} size="sm" />
                 <div>
-                  <p className="text-[11px] text-ink">{skill.author.name}</p>
-                  <p className="mt-0.5 max-w-[420px] text-[10.5px] leading-relaxed text-faint">
+                  <p className="text-[12px] text-ink">{skill.author.name}</p>
+                  <p className="mt-0.5 max-w-[420px] text-[12px] leading-relaxed text-faint">
                     {skill.author.bio || "ATELIER 成员"}
                   </p>
                 </div>
@@ -186,26 +188,26 @@ export default async function SkillDetailPage({
           </article>
 
           <aside className="lg:sticky lg:top-[100px] lg:self-start">
-            <div className="overflow-hidden rounded-[2px] border border-line bg-raised">
+            <div className="overflow-hidden rounded-lg border border-line bg-raised">
               <div className="border-b border-line p-5">
                 <div className="flex items-center justify-between">
                   <span className="eyebrow text-faint">Install / 安装</span>
-                  <span className="font-mono text-[8.5px] text-faint">v{skill.version}</span>
+                  <span className="font-mono text-[12px] text-faint">v{skill.version}</span>
                 </div>
 
                 {skill.installCommand ? (
                   <>
                     <div className="relative mt-4 bg-dark px-3.5 py-3.5 text-cream">
-                      <span className="absolute top-2.5 right-3 font-mono text-[8px] tracking-[0.1em] text-cream/25">
+                      <span className="absolute top-2.5 right-3 font-mono text-[12px] tracking-[0.1em] text-muted">
                         SHELL
                       </span>
-                      <code className="block pr-8 font-mono text-[9.5px] leading-[1.8] break-all text-cream/75">
+                      <code className="block pr-8 font-mono text-[12px] leading-[1.8] break-all text-cream/75">
                         <span className="mr-1.5 text-accent">$</span>
                         {skill.installCommand}
                       </code>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
-                      <span className="text-[9.5px] text-faint">在终端中运行</span>
+                      <span className="text-[12px] text-faint">在终端中运行</span>
                       <CopyButton
                         text={skill.installCommand}
                         label="复制命令"
@@ -216,7 +218,7 @@ export default async function SkillDetailPage({
                     </div>
                   </>
                 ) : (
-                  <p className="mt-4 text-[11px] leading-relaxed text-muted">
+                  <p className="mt-4 text-[12px] leading-relaxed text-muted">
                     作者未提供安装命令，请查看原始来源。
                   </p>
                 )}
@@ -243,7 +245,7 @@ export default async function SkillDetailPage({
                   href={skill.sourceUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="group flex items-center justify-between border-t border-line px-5 py-3.5 text-[11px] text-muted transition-colors hover:bg-sunken/35 hover:text-ink"
+                  className="group flex items-center justify-between border-t border-line px-5 py-3.5 text-[12px] text-muted transition-colors hover:bg-sunken/35 hover:text-ink"
                 >
                   查看原始来源
                   <ExternalLink
@@ -258,8 +260,8 @@ export default async function SkillDetailPage({
                 <div className="mt-3.5 flex items-start gap-3">
                   <Avatar name={skill.author.name} color={skill.author.color} size="sm" />
                   <div className="min-w-0">
-                    <p className="text-[11.5px] text-ink">{skill.author.name}</p>
-                    <p className="mt-1 line-clamp-3 text-[10.5px] leading-[1.7] text-faint">
+                    <p className="text-[12px] text-ink">{skill.author.name}</p>
+                    <p className="mt-1 line-clamp-3 text-[12px] leading-[1.7] text-faint">
                       {skill.author.bio || "ATELIER 成员"}
                     </p>
                   </div>
@@ -270,7 +272,7 @@ export default async function SkillDetailPage({
                 <div className="flex items-center justify-between border-t border-line bg-paper/35 px-5 py-3">
                   <Link
                     href={`/skills/${skill.slug}/edit`}
-                    className="inline-flex items-center gap-1.5 text-[10.5px] text-muted transition-colors hover:text-ink"
+                    className="inline-flex items-center gap-1.5 text-[12px] text-muted transition-colors hover:text-ink"
                   >
                     <PencilLine size={11} />
                     编辑档案
@@ -280,7 +282,7 @@ export default async function SkillDetailPage({
               )}
             </div>
 
-            <p className="mt-4 flex items-start gap-2 px-1 text-[9.5px] leading-[1.7] text-faint">
+            <p className="mt-4 flex items-start gap-2 px-1 text-[12px] leading-[1.7] text-faint">
               <SparkMark className="mt-0.5 size-2.5 flex-none text-accent/60" />
               档案内容由收录者维护。安装前请阅读来源仓库与许可协议。
             </p>
@@ -297,7 +299,7 @@ export default async function SkillDetailPage({
             </div>
             <Link
               href={`/library?category=${skill.category}`}
-              className="hidden items-center gap-1.5 text-[10.5px] text-muted transition-colors hover:text-ink sm:flex"
+              className="hidden items-center gap-1.5 text-[12px] text-muted transition-colors hover:text-ink sm:flex"
             >
               {skill.categoryLabel} · 同分类档案
               <ChevronRight size={12} />
@@ -325,8 +327,8 @@ function SpecRow({
 }) {
   return (
     <div className="flex items-center justify-between border-b border-line px-5 py-2.5 last:border-b-0">
-      <dt className="text-[10px] text-faint">{label}</dt>
-      <dd className={`text-[10.5px] text-ink ${mono ? "font-mono" : ""}`}>{value}</dd>
+      <dt className="text-[12px] text-faint">{label}</dt>
+      <dd className={`text-[12px] text-ink ${mono ? "font-mono" : ""}`}>{value}</dd>
     </div>
   );
 }

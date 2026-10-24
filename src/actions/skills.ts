@@ -7,6 +7,8 @@ import { getSessionUser } from "@/lib/auth";
 import { isCategory } from "@/lib/categories";
 import { getDb } from "@/lib/db";
 import { createUniqueSlug, getSkillBySlug } from "@/lib/skills";
+import { validateShowcase } from "@/lib/showcase-rules";
+import { listScreenshots, prepareScreenshots, removeScreenshotFiles, saveScreenshotRecords, ScreenshotError, writeScreenshotFiles } from "@/lib/screenshots";
 import { normalizeTags } from "@/lib/utils";
 
 export type SkillFormState = {
@@ -30,6 +32,9 @@ const skillSchema = z.object({
     .trim()
     .min(40, "说明文档至少需要 40 个字符。")
     .max(20_000, "说明文档不能超过 20,000 个字符。"),
+  useCases: z.string(),
+  exampleInput: z.string(),
+  exampleOutput: z.string(),
   category: z.string().refine(isCategory, "请选择有效的分类。"),
   tags: z.string().trim().min(1, "至少添加一个标签。").max(160, "标签过多。"),
   version: z
@@ -60,6 +65,9 @@ function readSkillForm(formData: FormData) {
     name: String(formData.get("name") ?? "").trim(),
     tagline: String(formData.get("tagline") ?? "").trim(),
     description: String(formData.get("description") ?? "").trim(),
+    useCases: String(formData.get("useCases") ?? "").trim(),
+    exampleInput: String(formData.get("exampleInput") ?? "").trim(),
+    exampleOutput: String(formData.get("exampleOutput") ?? "").trim(),
     category: String(formData.get("category") ?? "").trim(),
     tags: String(formData.get("tags") ?? "").trim(),
     version: String(formData.get("version") ?? "").trim(),
@@ -78,108 +86,82 @@ function mapZodErrors(error: z.ZodError): Record<string, string> {
   return errors;
 }
 
-export async function createSkillAction(
-  _state: SkillFormState,
-  formData: FormData,
-): Promise<SkillFormState> {
-  const user = await getSessionUser();
-  if (!user) redirect("/login");
-
-  const values = readSkillForm(formData);
-  const parsed = skillSchema.safeParse(values);
-  if (!parsed.success) {
-    return {
-      error: "还差一点。请检查标出的字段。",
-      fieldErrors: mapZodErrors(parsed.error),
-    };
-  }
-
-  const tags = normalizeTags(parsed.data.tags);
-  if (tags.length === 0) {
-    return { error: "请检查标签。", fieldErrors: { tags: "至少添加一个有效标签。" } };
-  }
-
-  const now = new Date().toISOString();
-  const slug = createUniqueSlug(parsed.data.name);
-  const db = getDb();
-
-  db.prepare(
-    `INSERT INTO skills (
-      slug, name, tagline, description, category, tags, version, license,
-      source_url, install_command, author_id, featured, view_count, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?, ?)`,
-  ).run(
-    slug,
-    parsed.data.name,
-    parsed.data.tagline,
-    parsed.data.description,
-    parsed.data.category,
-    JSON.stringify(tags),
-    parsed.data.version,
-    parsed.data.license,
-    parsed.data.sourceUrl || null,
-    parsed.data.installCommand || null,
-    user.id,
-    now,
-    now,
-  );
-
-  revalidatePath("/library");
-  redirect(`/skills/${slug}?created=1`);
+export async function createSkillAction(_state: SkillFormState, formData: FormData): Promise<SkillFormState> {
+  return persistSkill(formData, false);
 }
 
-export async function updateSkillAction(
-  _state: SkillFormState,
-  formData: FormData,
-): Promise<SkillFormState> {
+export async function updateSkillAction(_state: SkillFormState, formData: FormData): Promise<SkillFormState> {
+  return persistSkill(formData, true);
+}
+
+async function persistSkill(formData: FormData, editing: boolean): Promise<SkillFormState> {
   const user = await getSessionUser();
   if (!user) redirect("/login");
-
-  const slug = String(formData.get("slug") ?? "").trim();
-  const skill = getSkillBySlug(slug, user.id);
-  if (!skill) return { error: "没有找到这份技能档案。" };
-  if (skill.author.id !== user.id && user.role !== "admin") {
+  const original = editing ? getSkillBySlug(String(formData.get("slug") ?? "").trim(), user.id) : null;
+  if (editing && !original) return { error: "没有找到这份技能档案。" };
+  if (original && original.author.id !== user.id && user.role !== "admin") {
     return { error: "你只能编辑自己收录的技能。" };
   }
 
   const values = readSkillForm(formData);
   const parsed = skillSchema.safeParse(values);
-  if (!parsed.success) {
-    return {
-      error: "还差一点。请检查标出的字段。",
-      fieldErrors: mapZodErrors(parsed.error),
-    };
+  const legacy = Boolean(original && !original.useCases && !original.exampleInput && !original.exampleOutput);
+  const errors = { ...(!parsed.success ? mapZodErrors(parsed.error) : {}), ...validateShowcase(values, legacy) };
+  if (Object.keys(errors).length) return { error: "还差一点。请检查标出的字段。", fieldErrors: errors };
+  if (!parsed.success) return { error: "请检查填写的内容。" };
+  const tags = normalizeTags(values.tags);
+  if (!tags.length) return { error: "请检查标签。", fieldErrors: { tags: "至少添加一个有效标签。" } };
+
+  const db = getDb();
+  let plan: Awaited<ReturnType<typeof prepareScreenshots>>;
+  try {
+    plan = await prepareScreenshots(formData, original ? listScreenshots(db, original.id) : []);
+    if ((plan.kept.length || plan.uploads.length) && !values.exampleOutput) {
+      return { error: "请先补充文字案例。", fieldErrors: { exampleOutput: "添加截图时请一并填写任务输入和输出结果。" } };
+    }
+  } catch (error) {
+    return { error: "截图未能保存。", fieldErrors: { screenshots: error instanceof ScreenshotError ? error.message : "无法处理截图，请重试。" } };
   }
 
-  const tags = normalizeTags(parsed.data.tags);
-  if (tags.length === 0) {
-    return { error: "请检查标签。", fieldErrors: { tags: "至少添加一个有效标签。" } };
+  let slug = original?.slug ?? "";
+  let transaction = false;
+  try {
+    writeScreenshotFiles(plan.uploads);
+    db.exec("BEGIN IMMEDIATE");
+    transaction = true;
+    const now = new Date().toISOString();
+    const params = [values.name, values.tagline, values.description, values.category, JSON.stringify(tags),
+      values.version, values.license, values.sourceUrl || null, values.installCommand || null,
+      values.useCases, values.exampleInput, values.exampleOutput, now];
+    let skillId: number;
+    if (original) {
+      const result = db.prepare(`UPDATE skills SET name = ?, tagline = ?, description = ?, category = ?, tags = ?,
+        version = ?, license = ?, source_url = ?, install_command = ?, use_cases = ?, example_input = ?, example_output = ?, updated_at = ?
+        WHERE id = ? AND (author_id = ? OR ? = 'admin')`).run(...params, original.id, user.id, user.role);
+      if (Number(result.changes) !== 1) throw new Error("Skill changed while saving");
+      skillId = original.id;
+    } else {
+      slug = createUniqueSlug(values.name);
+      const result = db.prepare(`INSERT INTO skills (name, tagline, description, category, tags, version, license,
+        source_url, install_command, use_cases, example_input, example_output, updated_at, slug, author_id, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(...params, slug, user.id, now);
+      skillId = Number(result.lastInsertRowid);
+    }
+    saveScreenshotRecords(db, skillId, plan);
+    db.exec("COMMIT");
+    transaction = false;
+  } catch (error) {
+    if (transaction) db.exec("ROLLBACK");
+    removeScreenshotFiles(plan.uploads);
+    console.error("Skill save failed", error);
+    return { error: "保存失败，内容已保留，请稍后重试。" };
   }
-
-  getDb()
-    .prepare(
-      `UPDATE skills SET
-        name = ?, tagline = ?, description = ?, category = ?, tags = ?,
-        version = ?, license = ?, source_url = ?, install_command = ?, updated_at = ?
-       WHERE id = ?`,
-    )
-    .run(
-      parsed.data.name,
-      parsed.data.tagline,
-      parsed.data.description,
-      parsed.data.category,
-      JSON.stringify(tags),
-      parsed.data.version,
-      parsed.data.license,
-      parsed.data.sourceUrl || null,
-      parsed.data.installCommand || null,
-      new Date().toISOString(),
-      skill.id,
-    );
-
+  removeScreenshotFiles(plan.removed);
   revalidatePath("/library");
+  revalidatePath("/saved");
+  revalidatePath("/admin");
   revalidatePath(`/skills/${slug}`);
-  redirect(`/skills/${slug}?updated=1`);
+  redirect(`/skills/${slug}?${editing ? "updated" : "created"}=1`);
 }
 
 export async function deleteSkillAction(formData: FormData): Promise<void> {
@@ -193,7 +175,10 @@ export async function deleteSkillAction(formData: FormData): Promise<void> {
     redirect(`/skills/${slug}`);
   }
 
-  getDb().prepare("DELETE FROM skills WHERE id = ?").run(skill.id);
+  const db = getDb();
+  const images = listScreenshots(db, skill.id);
+  db.prepare("DELETE FROM skills WHERE id = ?").run(skill.id);
+  removeScreenshotFiles(images);
   revalidatePath("/library");
   revalidatePath("/saved");
   redirect("/library?deleted=1");

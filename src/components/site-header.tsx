@@ -27,9 +27,9 @@ type HeaderUser = {
 };
 
 const NAV_ITEMS = [
-  { href: "/library", label: "技能库", match: ["/library", "/skills"] },
+  { href: "/library", label: "发现 Skills", match: ["/library", "/skills"] },
   { href: "/saved", label: "收藏夹", match: ["/saved"] },
-  { href: "/submit", label: "收录技能", match: ["/submit"] },
+  { href: "/submit", label: "分享 Skill", match: ["/submit"] },
 ];
 
 export function SiteHeader({ user }: { user: HeaderUser }) {
@@ -106,7 +106,7 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
           <CommandSearch />
           <Link
             href="/submit"
-            className="btn btn-primary btn-sm hidden !min-h-[38px] sm:inline-flex"
+            className="btn btn-primary btn-sm hidden !min-h-[44px] sm:inline-flex"
           >
             <Plus size={13} strokeWidth={2} />
             收录
@@ -120,12 +120,12 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
               aria-haspopup="menu"
               aria-label="账户菜单"
               className={cn(
-                "flex h-9 items-center gap-2 rounded-[2px] border border-transparent pl-0.5 transition-colors",
+                "flex min-h-11 items-center gap-2 rounded-lg border border-transparent pl-0.5 transition-colors",
                 menuOpen ? "border-line bg-raised/70 pr-1.5" : "hover:border-line hover:pr-1.5",
               )}
             >
               <Avatar name={user.name} color={user.avatarColor} />
-              <span className="hidden max-w-24 truncate text-[11.5px] text-muted lg:block">
+              <span className="hidden max-w-24 truncate text-[12px] text-muted lg:block">
                 {user.name}
               </span>
               <ChevronDown
@@ -141,16 +141,16 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
               <div
                 role="menu"
                 aria-label="账户菜单"
-                className="animate-rise absolute top-[calc(100%+10px)] right-0 w-[248px] overflow-hidden rounded-[2px] border border-line bg-raised shadow-[0_24px_55px_-28px_rgba(24,21,16,0.55)]"
+                className="animate-rise absolute top-[calc(100%+10px)] right-0 w-[248px] overflow-hidden rounded-lg border border-line bg-raised shadow-[0_24px_55px_-28px_rgba(24,21,16,0.55)]"
               >
                 <div className="border-b border-line px-4 py-3.5">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-[12.5px] font-medium text-ink">{user.name}</p>
-                    <span className="eyebrow text-[8px] text-faint">
+                    <p className="truncate text-sm font-medium text-ink">{user.name}</p>
+                    <span className="eyebrow text-[12px] text-faint">
                       {user.role === "admin" ? "Curator" : "Member"}
                     </span>
                   </div>
-                  <p className="mt-1 truncate text-[10.5px] text-faint">{user.email}</p>
+                  <p className="mt-1 truncate text-[12px] text-faint">{user.email}</p>
                 </div>
 
                 <div className="p-1.5" onClick={() => setMenuOpen(false)}>
@@ -166,7 +166,7 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
                     <button
                       type="submit"
                       role="menuitem"
-                      className="flex w-full items-center gap-2.5 rounded-[2px] px-2.5 py-2 text-left text-[11.5px] text-muted transition-colors hover:bg-sunken/60 hover:text-ink"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12px] text-muted transition-colors hover:bg-sunken/60 hover:text-ink"
                     >
                       <LogOut size={13} strokeWidth={1.8} />
                       退出登录
@@ -180,7 +180,7 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
           <button
             type="button"
             onClick={() => setMobileOpen((current) => !current)}
-            className="ml-0.5 flex size-9 items-center justify-center rounded-[2px] border border-line text-ink md:hidden"
+            className="ml-0.5 flex size-9 items-center justify-center rounded-lg border border-line text-ink md:hidden"
             aria-label={mobileOpen ? "关闭菜单" : "打开菜单"}
             aria-expanded={mobileOpen}
           >
@@ -203,7 +203,7 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
                   )}
                 >
                   <span className="flex items-baseline gap-4">
-                    <span className="font-mono text-[9px] text-faint">
+                    <span className="font-mono text-[12px] text-faint">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="display-cn text-[32px] leading-none">{item.label}</span>
@@ -216,7 +216,7 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
                 className="flex items-baseline justify-between border-b border-line py-5 text-muted"
               >
                 <span className="flex items-baseline gap-4">
-                  <span className="font-mono text-[9px] text-faint">04</span>
+                  <span className="font-mono text-[12px] text-faint">04</span>
                   <span className="display-cn text-[32px] leading-none">我的档案</span>
                 </span>
               </Link>
@@ -226,7 +226,7 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
                   className="flex items-baseline justify-between border-b border-line py-5 text-muted"
                 >
                   <span className="flex items-baseline gap-4">
-                    <span className="font-mono text-[9px] text-faint">05</span>
+                    <span className="font-mono text-[12px] text-faint">05</span>
                     <span className="display-cn text-[32px] leading-none">馆务台</span>
                   </span>
                   <ShieldCheck size={15} className="text-accent" />
@@ -238,14 +238,14 @@ export function SiteHeader({ user }: { user: HeaderUser }) {
               <div className="flex items-center gap-2.5">
                 <Avatar name={user.name} color={user.avatarColor} />
                 <div>
-                  <p className="text-[12px] text-ink">{user.name}</p>
-                  <p className="mt-0.5 text-[10px] text-faint">{user.email}</p>
+                  <p className="text-sm text-ink">{user.name}</p>
+                  <p className="mt-0.5 text-[12px] text-faint">{user.email}</p>
                 </div>
               </div>
               <form action={logoutAction}>
                 <button
                   type="submit"
-                  className="flex items-center gap-1.5 text-[11px] text-muted transition-colors hover:text-ink"
+                  className="flex items-center gap-1.5 text-[12px] text-muted transition-colors hover:text-ink"
                 >
                   <LogOut size={12} />
                   退出
@@ -275,7 +275,7 @@ function MenuLink({
     <Link
       href={href}
       role="menuitem"
-      className="flex items-center gap-2.5 rounded-[2px] px-2.5 py-2 text-[11.5px] text-muted transition-colors hover:bg-sunken/60 hover:text-ink"
+      className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] text-muted transition-colors hover:bg-sunken/60 hover:text-ink"
     >
       <Icon size={13} strokeWidth={1.8} className={accent ? "text-accent" : undefined} />
       {label}

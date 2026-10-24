@@ -11,9 +11,11 @@ const initialState: AuthFormState = {};
 export function JoinForm({
   code,
   inviterName,
+  returnTo = "/",
 }: {
   code: string;
   inviterName: string;
+  returnTo?: string;
 }) {
   const [state, formAction, pending] = useActionState(registerAction, initialState);
   const errors = state.fieldErrors ?? {};
@@ -26,24 +28,25 @@ export function JoinForm({
       </div>
 
       <h1 className="display-cn text-[44px] text-ink sm:text-[50px]">门为你开着。</h1>
-      <p className="mt-4 max-w-[340px] text-[13.5px] leading-[1.8] text-muted">
-        邀请函已被核验。完成注册，成为这座档案馆的一员。
+      <p className="mt-4 max-w-[340px] text-[14px] leading-[1.8] text-muted">
+        邀请已确认。完成注册，开始创作你的第一支影片。
       </p>
 
       <div className="my-6 flex items-center justify-between gap-4 border-y border-line py-3">
         <span className="micro text-faint">Invited by</span>
-        <span className="text-[12px] font-medium text-ink">{inviterName}</span>
+        <span className="text-[14px] font-medium text-ink">{inviterName}</span>
         <span className="h-3 w-px bg-line" />
-        <span className="input-code font-mono text-[10.5px] text-muted">{code}</span>
+        <span className="input-code font-mono text-[12px] text-muted">{code}</span>
       </div>
 
       <form action={formAction} className="space-y-4" noValidate>
         <input type="hidden" name="code" value={code} />
+        <input type="hidden" name="next" value={returnTo} />
 
         {state.error && !state.fieldErrors && (
           <p
             role="alert"
-            className="flex items-start gap-2 border-l-2 border-accent bg-accent-soft/45 px-3 py-2.5 text-[12px] leading-relaxed text-accent-deep"
+            className="flex items-start gap-2 border-l-2 border-danger bg-danger-soft px-3 py-2.5 text-[14px] leading-relaxed text-danger"
           >
             <AlertCircle size={14} className="mt-0.5 flex-none" />
             {state.error}
@@ -159,14 +162,14 @@ export function JoinForm({
           )}
         </button>
 
-        <p className="text-center text-[10.5px] leading-relaxed text-faint">
-          加入即表示你同意只收录自己有权分享的内容，并尊重档案馆的私密性。
+        <p className="text-center text-[12px] leading-relaxed text-faint">
+          请使用你有权使用的脚本和素材，尊重每一位创作者。
         </p>
       </form>
 
-      <p className="mt-5 border-t border-line pt-5 text-[12px] text-muted">
+      <p className="mt-5 border-t border-line pt-5 text-[14px] text-muted">
         已经是成员？{" "}
-        <Link href="/login" className="link-underline text-ink">
+        <Link href={`/login?next=${encodeURIComponent(returnTo)}`} className="link-underline text-ink">
           直接登录
         </Link>
       </p>

@@ -29,12 +29,12 @@ export function Logo({
   return (
     <Link
       href={href}
-      aria-label="ATELIER 私人技能档案馆"
+      aria-label="ATELIER 视频创作"
       className="group inline-flex items-center gap-2.5 rounded-sm"
     >
       <span
         className={cn(
-          "relative flex size-8 flex-none items-center justify-center border transition-colors duration-300",
+          "relative flex size-10 flex-none items-center justify-center rounded-lg border transition-colors duration-300",
           inverted
             ? "border-cream/35 text-cream group-hover:border-cream/70"
             : "border-ink/25 text-ink group-hover:border-ink/60",
@@ -46,7 +46,7 @@ export function Logo({
       <span className="flex flex-col justify-center">
         <span
           className={cn(
-            "font-display text-[22px] leading-none tracking-[0.12em]",
+            "font-sans text-[22px] font-semibold leading-none tracking-[-0.04em]",
             inverted ? "text-cream" : "text-ink",
           )}
         >
@@ -55,11 +55,11 @@ export function Logo({
         {!compact && (
           <span
             className={cn(
-              "mt-[5px] font-mono text-[7px] leading-none tracking-[0.22em] uppercase",
-              inverted ? "text-cream/45" : "text-faint",
+              "mt-[5px] hidden font-mono text-[12px] leading-none tracking-[0.06em] uppercase sm:block",
+              inverted ? "text-muted" : "text-faint",
             )}
           >
-            Private skill archive
+            AI Video Studio
           </span>
         )}
       </span>
@@ -81,12 +81,12 @@ export function Avatar({
   const label = initials(name);
   const sizeClass =
     size === "sm"
-      ? "size-6 text-[8px]"
+      ? "size-6 text-[12px]"
       : size === "xl"
         ? "size-20 text-lg"
         : size === "lg"
           ? "size-14 text-sm"
-          : "size-8 text-[9px]";
+          : "size-8 text-[12px]";
 
   return (
     <span

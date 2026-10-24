@@ -43,7 +43,7 @@ export function DeleteSkillDialog({
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          "inline-flex items-center gap-1.5 text-[10.5px] text-faint transition-colors hover:text-accent-deep",
+          "inline-flex items-center gap-1.5 text-[12px] text-faint transition-colors hover:text-danger",
           className,
         )}
       >
@@ -64,7 +64,7 @@ export function DeleteSkillDialog({
           >
             <div className="animate-rise w-full max-w-[430px] border border-line bg-raised p-6 shadow-[0_40px_100px_-35px_rgba(18,15,10,0.6)] sm:p-7">
               <div className="flex items-start justify-between gap-4">
-                <span className="flex size-9 items-center justify-center rounded-full bg-accent-soft/70 text-accent-deep">
+                <span className="flex size-9 items-center justify-center rounded-full bg-danger-soft text-danger">
                   <AlertTriangle size={16} strokeWidth={1.8} />
                 </span>
                 <button
@@ -80,7 +80,7 @@ export function DeleteSkillDialog({
               <h2 id="delete-title" className="display-cn mt-5 text-[30px] leading-tight text-ink">
                 确定要删除吗？
               </h2>
-              <p className="mt-3 text-[12.5px] leading-[1.8] text-muted">
+              <p className="mt-3 text-[14px] leading-[1.8] text-muted">
                 档案「<span className="font-medium text-ink">{name}</span>
                 」将被永久移出档案馆，成员的收藏也会一并清除。这个操作无法撤销。
               </p>
@@ -110,7 +110,7 @@ export function DeleteSkillDialog({
 function DeleteSubmit() {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" disabled={pending} className="btn btn-accent btn-sm">
+    <button type="submit" disabled={pending} className="btn btn-danger btn-sm">
       {pending ? <LoaderCircle size={13} className="animate-spin" /> : <Trash2 size={13} />}
       {pending ? "正在删除" : "确认删除"}
     </button>

@@ -30,7 +30,7 @@ export default async function EditSkillPage({
       <div className="flex h-[58px] items-center justify-between border-b border-line">
         <Link
           href={`/skills/${slug}`}
-          className="flex items-center gap-1.5 text-[10.5px] text-faint transition-colors hover:text-ink"
+          className="flex items-center gap-1.5 text-[12px] text-faint transition-colors hover:text-ink"
         >
           <ArrowLeft size={12} />
           返回档案
@@ -46,7 +46,7 @@ export default async function EditSkillPage({
         <h1 className="display-cn mt-5 max-w-[820px] text-[clamp(42px,5.4vw,68px)] leading-[1.03]">
           修整「{skill.name}」<span className="text-accent">。</span>
         </h1>
-        <p className="mt-4 flex items-center gap-2 text-[11px] text-faint">
+        <p className="mt-4 flex items-center gap-2 text-[12px] text-faint">
           上次更新于 {formatRelative(skill.updatedAt)}
           <span className="size-[3px] rounded-full bg-line-strong" />
           {skill.bookmarkCount} 位成员收藏了这份档案

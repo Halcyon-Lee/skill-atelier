@@ -6,11 +6,12 @@ import { checkInviteAction, type AuthFormState } from "@/actions/auth";
 
 const initialState: AuthFormState = {};
 
-export function InviteGateForm({ initialCode = "" }: { initialCode?: string }) {
+export function InviteGateForm({ initialCode = "", returnTo = "/" }: { initialCode?: string; returnTo?: string }) {
   const [state, formAction, pending] = useActionState(checkInviteAction, initialState);
 
   return (
     <form action={formAction} className="space-y-3.5" noValidate>
+      <input type="hidden" name="next" value={returnTo} />
       <div>
         <label htmlFor="invite-code" className="field-label">
           <span>邀请码 · Invitation code</span>
@@ -20,16 +21,16 @@ export function InviteGateForm({ initialCode = "" }: { initialCode?: string }) {
           id="invite-code"
           name="code"
           type="text"
-          defaultValue={initialCode.toUpperCase()}
-          placeholder="ATL-XXXX-XXXX"
+          defaultValue={initialCode}
+          placeholder="输入邀请码"
           autoComplete="one-time-code"
-          autoCapitalize="characters"
+          autoCapitalize="none"
           spellCheck={false}
           maxLength={40}
           required
           aria-invalid={Boolean(state.error) || undefined}
           aria-describedby={state.error ? "invite-error" : "invite-help"}
-          className="field input-code !h-[54px] !text-[13px]"
+          className="field input-code !h-[54px] !text-[16px]"
         />
       </div>
 
@@ -37,7 +38,7 @@ export function InviteGateForm({ initialCode = "" }: { initialCode?: string }) {
         <p
           id="invite-error"
           role="alert"
-          className="flex items-start gap-2 border-l-2 border-accent bg-accent-soft/45 px-3 py-2.5 text-[12px] leading-relaxed text-accent-deep"
+          className="flex items-start gap-2 border-l-2 border-danger bg-danger-soft px-3 py-2.5 text-[14px] leading-relaxed text-danger"
         >
           <AlertCircle size={14} className="mt-0.5 flex-none" />
           {state.error}
@@ -48,11 +49,11 @@ export function InviteGateForm({ initialCode = "" }: { initialCode?: string }) {
         {pending ? (
           <>
             <LoaderCircle size={15} className="animate-spin" />
-            正在核验邀请函
+            正在验证
           </>
         ) : (
           <>
-            进入档案馆
+            验证邀请码
             <ArrowUpRight
               size={16}
               className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -61,7 +62,7 @@ export function InviteGateForm({ initialCode = "" }: { initialCode?: string }) {
         )}
       </button>
 
-      <p id="invite-help" className="pt-0.5 text-center text-[11.5px] leading-relaxed text-faint">
+      <p id="invite-help" className="pt-0.5 text-center text-[12px] leading-relaxed text-faint">
         邀请码由一位已加入的成员提供。
       </p>
     </form>

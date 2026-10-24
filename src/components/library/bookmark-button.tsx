@@ -56,10 +56,10 @@ export function BookmarkButton({
       disabled={pending}
       aria-pressed={saved}
       className={cn(
-        "flex h-11 w-full items-center justify-center gap-2 rounded-[2px] border text-[12px] font-medium transition-colors",
+        "flex h-11 w-full items-center justify-center gap-2 rounded-lg border text-[14px] font-medium transition-colors",
         saved
-          ? "border-ink bg-ink text-cream hover:bg-accent hover:border-accent"
-          : "border-line-strong bg-transparent text-ink hover:border-ink hover:bg-ink hover:text-cream",
+          ? "border-accent bg-accent text-on-accent hover:bg-accent-deep hover:border-accent-deep"
+          : "border-line-strong bg-transparent text-ink hover:border-ink hover:bg-accent hover:text-on-accent",
       )}
     >
       {pending ? (
@@ -70,7 +70,7 @@ export function BookmarkButton({
         <Bookmark size={14} strokeWidth={1.9} />
       )}
       {saved ? "已收藏" : "收藏这份档案"}
-      <span className={cn("font-mono text-[9px]", saved ? "text-cream/45" : "text-faint")}>
+      <span className="font-mono text-xs">
         {count}
       </span>
     </button>

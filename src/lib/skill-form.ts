@@ -1,7 +1,13 @@
+import type { SkillScreenshot } from "@/lib/showcase-rules";
+
 export type SkillFormInitial = {
   name: string;
   tagline: string;
   description: string;
+  useCases: string;
+  exampleInput: string;
+  exampleOutput: string;
+  screenshots: SkillScreenshot[];
   category: string;
   tags: string;
   version: string;
@@ -14,6 +20,10 @@ export function skillToFormInitial(skill: {
   name: string;
   tagline: string;
   description: string;
+  useCases: string;
+  exampleInput: string;
+  exampleOutput: string;
+  screenshots: SkillScreenshot[];
   category: string;
   tags: string[];
   version: string;
@@ -25,6 +35,10 @@ export function skillToFormInitial(skill: {
     name: skill.name,
     tagline: skill.tagline,
     description: skill.description,
+    useCases: skill.useCases,
+    exampleInput: skill.exampleInput,
+    exampleOutput: skill.exampleOutput,
+    screenshots: skill.screenshots,
     category: skill.category,
     tags: skill.tags.join(", "),
     version: skill.version,

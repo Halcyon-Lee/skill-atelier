@@ -13,6 +13,7 @@ import {
   requestIp,
 } from "@/lib/rate-limit";
 import { avatarColorFor } from "@/lib/utils";
+import { safeReturnTo } from "@/lib/video/types";
 
 export type AuthFormState = {
   error?: string;
@@ -56,7 +57,7 @@ export async function checkInviteAction(
     return { error: inviteReasonMessage(result.reason), values: { code } };
   }
 
-  redirect(`/join?code=${encodeURIComponent(result.invite.code)}`);
+  redirect(`/join?code=${encodeURIComponent(result.invite.code)}&next=${encodeURIComponent(safeReturnTo(stringValue(formData, "next")))}`);
 }
 
 export async function loginAction(
@@ -88,7 +89,7 @@ export async function loginAction(
 
   clearRateLimit(`login-email:${email}`);
   await createSession(user.id);
-  redirect("/library");
+  redirect(safeReturnTo(stringValue(formData, "next")));
 }
 
 export async function registerAction(
@@ -167,7 +168,7 @@ export async function registerAction(
       .prepare(
         `UPDATE invites
          SET used_count = used_count + 1
-         WHERE id = ? AND used_count < max_uses AND revoked_at IS NULL`,
+         WHERE id = ? AND (max_uses = 0 OR used_count < max_uses) AND revoked_at IS NULL`,
       )
       .run(freshInvite.invite.id);
 
@@ -187,7 +188,7 @@ export async function registerAction(
   }
 
   await createSession(userId);
-  redirect("/library?welcome=1");
+  redirect(safeReturnTo(stringValue(formData, "next")));
 }
 
 export async function logoutAction(): Promise<void> {

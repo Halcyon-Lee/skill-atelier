@@ -45,11 +45,11 @@ export function PasswordInput({
         type="button"
         onClick={() => setVisible((current) => !current)}
         aria-label={visible ? "隐藏密码" : "显示密码"}
+        aria-pressed={visible}
         className={cn(
-          "absolute top-1/2 right-2 flex size-9 -translate-y-1/2 items-center justify-center text-faint",
+          "absolute top-1/2 right-1 flex size-11 -translate-y-1/2 items-center justify-center text-faint",
           "transition-colors hover:text-ink",
         )}
-        tabIndex={-1}
       >
         {visible ? <EyeOff size={16} strokeWidth={1.7} /> : <Eye size={16} strokeWidth={1.7} />}
       </button>

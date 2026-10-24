@@ -1,9 +1,11 @@
 import "server-only";
 
 import { pinyin } from "pinyin-pro";
-import { getCategory, isCategory, type CategorySlug } from "@/lib/categories";
+import { CATEGORIES, getCategory, isCategory, type CategorySlug } from "@/lib/categories";
 import { getDb } from "@/lib/db";
 import { parseTags } from "@/lib/utils";
+import { listScreenshots } from "@/lib/screenshots";
+import type { SkillScreenshot } from "@/lib/showcase-rules";
 
 export type SkillSort = "newest" | "popular" | "title";
 
@@ -13,6 +15,9 @@ export type SkillRow = {
   name: string;
   tagline: string;
   description: string;
+  use_cases: string;
+  example_input: string;
+  example_output: string;
   category: string;
   tags: string;
   version: string;
@@ -37,6 +42,10 @@ export type Skill = {
   name: string;
   tagline: string;
   description: string;
+  useCases: string;
+  exampleInput: string;
+  exampleOutput: string;
+  screenshots: SkillScreenshot[];
   category: CategorySlug;
   categoryLabel: string;
   categoryEnglish: string;
@@ -88,6 +97,10 @@ function mapSkill(row: SkillRow): Skill {
     name: row.name,
     tagline: row.tagline,
     description: row.description,
+    useCases: row.use_cases,
+    exampleInput: row.example_input,
+    exampleOutput: row.example_output,
+    screenshots: [],
     category: category.slug,
     categoryLabel: category.label,
     categoryEnglish: category.english,
@@ -126,9 +139,9 @@ function buildFilters(filters: LibraryFilters): QueryPart {
   if (q) {
     const like = `%${escapeLike(q)}%`;
     clauses.push(
-      "(s.name LIKE ? ESCAPE '\\' OR s.tagline LIKE ? ESCAPE '\\' OR s.tags LIKE ? ESCAPE '\\' OR s.description LIKE ? ESCAPE '\\')",
+      "(s.name LIKE ? ESCAPE '\\' OR s.tagline LIKE ? ESCAPE '\\' OR s.tags LIKE ? ESCAPE '\\' OR s.description LIKE ? ESCAPE '\\' OR s.use_cases LIKE ? ESCAPE '\\')",
     );
-    params.push(like, like, like, like);
+    params.push(like, like, like, like, like);
   }
 
   if (filters.category && isCategory(filters.category)) {
@@ -187,21 +200,35 @@ export function getSkillBySlug(slug: string, userId: number): Skill | null {
   const row = getDb()
     .prepare(`${SKILL_SELECT} WHERE s.slug = ?`)
     .get(userId, slug) as unknown as SkillRow | undefined;
-  return row ? mapSkill(row) : null;
+  if (!row) return null;
+  const skill = mapSkill(row);
+  skill.screenshots = listScreenshots(getDb(), row.id).map((image) => ({ id: image.id, url: `/api/screenshots/${image.id}` }));
+  return skill;
 }
 
 export function getSkillById(id: number, userId: number): Skill | null {
   const row = getDb()
     .prepare(`${SKILL_SELECT} WHERE s.id = ?`)
     .get(userId, id) as unknown as SkillRow | undefined;
-  return row ? mapSkill(row) : null;
+  return row ? getSkillBySlug(row.slug, userId) : null;
 }
 
-export function getFeaturedSkill(userId: number): Skill | null {
-  const row = getDb()
-    .prepare(`${SKILL_SELECT} WHERE s.featured = 1 ORDER BY s.created_at DESC, s.id DESC LIMIT 1`)
-    .get(userId) as unknown as SkillRow | undefined;
-  return row ? mapSkill(row) : null;
+export function getFeaturedSkills(userId: number): Skill[] {
+  const rows = getDb()
+    .prepare(`${SKILL_SELECT}
+      JOIN (
+        SELECT id, ROW_NUMBER() OVER (
+          PARTITION BY category
+          ORDER BY (LENGTH(TRIM(use_cases)) > 0) DESC, featured DESC, created_at DESC, id DESC
+        ) AS category_rank
+        FROM skills
+      ) picks ON picks.id = s.id AND picks.category_rank = 1`)
+    .all(userId) as unknown as SkillRow[];
+  const byCategory = new Map(rows.map((row) => [row.category, row]));
+  return CATEGORIES.flatMap((category) => {
+    const row = byCategory.get(category.slug);
+    return row ? [mapSkill(row)] : [];
+  });
 }
 
 export function getRelatedSkills(skill: Skill, userId: number, limit = 3): Skill[] {
