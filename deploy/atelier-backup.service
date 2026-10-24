@@ -1,0 +1,7 @@
+[Unit]
+Description=Back up the ATELIER SQLite database
+
+[Service]
+Type=oneshot
+WorkingDirectory=/srv/atelier
+ExecStart=/srv/atelier/scripts/backup.sh

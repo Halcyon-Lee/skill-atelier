@@ -190,6 +190,9 @@ src/
   lib/                      数据库、鉴权、会话、验证、查询、种子数据
 data/                       SQLite 数据文件（gitignore）
 scripts/reset-db.mjs        本地数据库重置脚本
+deploy/                     服务器自动部署、备份脚本与 systemd 单元
+Dockerfile                  生产镜像
+docker-compose.yml          单实例应用 + 持久化 SQLite
 ```
 
 ## 数据与内容
@@ -205,14 +208,37 @@ scripts/reset-db.mjs        本地数据库重置脚本
 
 不再生成虚拟成员、演示技能或虚构收藏。运行上述导入命令后，35 份 GitHub Skill 以管理员身份收录；卡片昵称表示本站贡献者，原始作者可通过来源链接查看。
 
-## 部署提示
+## 部署
 
-- 必须使用**持久化磁盘**保存 `data/atelier.db`。SQLite 不适合无状态/多实例的 Serverless 部署；推荐 VPS、Fly.io、Railway 或 Docker + volume。
-- 效果截图保存在数据库所在目录下的 `screenshots/` 子目录；备份、迁移和部署时应一并保留。首次启动会自动补充案例字段与截图表，无需重置旧数据库。
-- 单实例运行，定期备份 `data/atelier.db`（以及服务停止时的 `-wal` / `-shm` 文件）。
-- 设置 `SITE_URL` 为真实域名，并用 HTTPS 反向代理（Caddy / Nginx）。
-- 首次部署前配置好 `.env.local` 中的管理员密码。
-- 目前没有邮件服务；成员忘记密码时，需要由馆员协助重置（可在服务器侧处理，或后续接入邮件找回）。
+生产形态是一个带持久化磁盘的 Docker 单实例，不能部署到 GitHub Pages，也不适合无状态 Serverless 多实例。完整服务器步骤见 [`deploy/README.md`](deploy/README.md)。
+
+当前采用 **GitHub Actions CI/CD**：
+
+- 每次 push / merge 到 `main`，先运行 `Verify`：install + lint + typecheck + build
+- 校验通过后构建镜像并推送到 GHCR
+- 通过受限 SSH 密钥部署到服务器（不能打开服务器 shell）
+- 新容器健康检查通过才完成部署；失败自动回滚旧镜像
+- 每日 SQLite 在线备份 + 每次部署前备份
+- 旧版服务器轮询部署保留为手动 fallback，systemd timer 默认关闭
+
+仓库需要配置一个 Actions Secret：`DEPLOY_SSH_KEY`。部署细节、服务器目录和回滚方式见 [`deploy/README.md`](deploy/README.md)。
+
+```bash
+# 上线
+git push origin main
+```
+
+生产注意事项：
+
+- 使用持久化目录保存 `data/atelier.db`，单实例运行。
+- 效果截图保存在数据库目录下的 `screenshots/`，样片与视频任务分别保存在 `video-previews/` 和 `video-jobs/`；备份、迁移时应一并保留。首次启动自动迁移旧库，无需重置。
+- 视频生成进程需按上方「视频制作运行」单独配置模型认证与运行依赖，再启动 worker。
+- 当前通过 Docker Nginx 网关对外提供 80 端口，应用本身只监听 `127.0.0.1:3000`。
+- 对外正式提供服务时使用域名 + HTTPS；中国大陆服务器需完成 ICP 备案。
+- 首次部署前在服务器 `/srv/atelier/.env` 设置管理员密码、初始邀请码和 `SITE_URL`。
+- 域名和 HTTPS 就绪后，将 `BIND_ADDRESS` 改为 `127.0.0.1`、`COOKIE_SECURE` 改为 `true`。
+- 只给可信成员仓库 Write 权限；外部贡献者使用 fork PR，不会拿到部署密钥。
+- 目前没有邮件服务；成员忘记密码时需要馆员协助重置。
 
 ## 已验证流程
 

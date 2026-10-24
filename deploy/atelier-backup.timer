@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily ATELIER database backup
+
+[Timer]
+OnCalendar=*-*-* 04:15:00
+RandomizedDelaySec=15min
+Persistent=true
+Unit=atelier-backup.service
+
+[Install]
+WantedBy=timers.target
