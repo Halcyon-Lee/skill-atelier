@@ -14,7 +14,7 @@ COMPOSE_FILE="$APP_DIR/docker-compose.yml"
 STATE_FILE="$APP_DIR/.deployed_sha"
 FAILED_FILE="$APP_DIR/.failed_sha"
 LOCK_FILE="$APP_DIR/.deploy.lock"
-HEALTH_URL="http://127.0.0.1:3000/api/health"
+HEALTH_URL="http://127.0.0.1:80/api/health"
 IMAGE_REPO="ghcr.io/halcyon-lee/skill-atelier"
 
 log() {

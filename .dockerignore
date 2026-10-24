@@ -10,3 +10,4 @@ backups
 AGENTS.md
 deploy
 docker-compose.yml
+nginx.conf

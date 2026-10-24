@@ -176,7 +176,8 @@ git push origin main
 生产注意事项：
 
 - 使用持久化目录保存 `data/atelier.db`，单实例运行。
-- 对外提供服务时使用域名 + HTTPS 反向代理；中国大陆服务器需完成 ICP 备案。
+- 当前通过 Docker Nginx 网关对外提供 80 端口，应用本身只监听 `127.0.0.1:3000`。
+- 对外正式提供服务时使用域名 + HTTPS；中国大陆服务器需完成 ICP 备案。
 - 首次部署前在服务器 `/srv/atelier/.env` 设置管理员密码、初始邀请码和 `SITE_URL`。
 - 域名和 HTTPS 就绪后，将 `BIND_ADDRESS` 改为 `127.0.0.1`、`COOKIE_SECURE` 改为 `true`。
 - 只给可信成员仓库 Write 权限；外部贡献者使用 fork PR，不会拿到部署密钥。

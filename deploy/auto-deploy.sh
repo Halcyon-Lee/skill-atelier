@@ -18,7 +18,7 @@ FAILED_FILE="$APP_DIR/.failed_sha"
 ETAG_FILE="$APP_DIR/.github_etag"
 LOCK_FILE="$APP_DIR/.deploy.lock"
 BUILD_ROOT="$APP_DIR/.builds"
-HEALTH_URL="http://127.0.0.1:3000/api/health"
+HEALTH_URL="http://127.0.0.1:80/api/health"
 
 log() {
   printf '[%s] %s\n' "$(date '+%F %T')" "$*"
