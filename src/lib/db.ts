@@ -91,7 +91,6 @@ function createDatabase(): DatabaseSync {
   database.exec(SCHEMA);
   migrateShowcase(database);
   migrateVideo(database);
-  seedDatabase(database);
   return database;
 }
 
@@ -115,4 +114,20 @@ export function getDb(): DatabaseSync {
     globalForDatabase.__atelierVideoVersion = 2;
   }
   return globalForDatabase.__atelierDatabase;
+}
+
+let seedChecked = false;
+
+/**
+ * Seed the first administrator and invitation at runtime.
+ * This is deliberately separate from getDb(): opening the database during
+ * `next build` must not require production-only secrets.
+ */
+export function ensureSeeded(): DatabaseSync {
+  const database = getDb();
+  if (!seedChecked) {
+    seedDatabase(database);
+    seedChecked = true;
+  }
+  return database;
 }

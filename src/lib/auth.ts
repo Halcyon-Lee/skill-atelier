@@ -4,7 +4,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getDb } from "@/lib/db";
+import { ensureSeeded, getDb } from "@/lib/db";
 
 export const SESSION_COOKIE = "atelier_session";
 const SESSION_DAYS = 30;
@@ -46,7 +46,7 @@ function mapUser(row: UserRow): SessionUser {
 }
 
 export function findUserByEmail(email: string): (SessionUser & { passwordHash: string }) | null {
-  const row = getDb()
+  const row = ensureSeeded()
     .prepare("SELECT * FROM users WHERE email = ? COLLATE NOCASE")
     .get(email.trim().toLowerCase()) as (UserRow & { password_hash: string }) | undefined;
 

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getDb } from "@/lib/db";
+import { ensureSeeded } from "@/lib/db";
 
 export type InviteRow = {
   id: number;
@@ -27,7 +27,7 @@ export function checkInvite(code: string): InviteCheck {
   const normalized = normalizeInviteCode(code);
   if (!normalized) return { valid: false, reason: "invalid" };
 
-  const row = getDb()
+  const row = ensureSeeded()
     .prepare(
       `SELECT i.*, u.name AS creator_name
        FROM invites i JOIN users u ON u.id = i.created_by

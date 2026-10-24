@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { ensureSeeded } from "@/lib/db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = ensureSeeded();
     db.prepare("SELECT 1 AS ok").get();
 
     return NextResponse.json(

@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { getDb } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { VIDEO_STYLES } from "@/lib/video/catalog";
 import { getFavoriteStyles } from "@/lib/video/server";
 import { VideoShell } from "@/components/video/shell";
 import { StyleGallery } from "@/components/video/style-gallery";
 export default async function HomePage() {
-  getDb();
   const user=await getSessionUser();
   return <VideoShell>
     <section id="styles" className="shell scroll-mt-40 py-8 sm:py-10">
