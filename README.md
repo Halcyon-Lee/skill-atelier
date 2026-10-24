@@ -157,21 +157,20 @@ docker-compose.yml          单实例应用 + 持久化 SQLite
 
 生产形态是一个带持久化磁盘的 Docker 单实例，不能部署到 GitHub Pages，也不适合无状态 Serverless 多实例。完整服务器步骤见 [`deploy/README.md`](deploy/README.md)。
 
-当前实现采用**服务器拉取式自动部署**：
+当前采用 **GitHub Actions CI/CD**：
 
-- systemd timer 每 2 分钟检查 GitHub `main` 的提交
-- 只有新提交才下载源码并构建 Docker 镜像
-- 新容器健康检查通过才标记为部署成功，失败自动回滚
+- 每次 push / merge 到 `main`，先运行 `Verify`：install + lint + typecheck + build
+- 校验通过后构建镜像并推送到 GHCR
+- 通过受限 SSH 密钥部署到服务器（不能打开服务器 shell）
+- 新容器健康检查通过才完成部署；失败自动回滚旧镜像
 - 每日 SQLite 在线备份 + 每次部署前备份
-- 不需要把服务器 SSH 私钥放进 GitHub Secrets
+- 旧版服务器轮询部署保留为手动 fallback，systemd timer 默认关闭
+
+仓库需要配置一个 Actions Secret：`DEPLOY_SSH_KEY`。部署细节、服务器目录和回滚方式见 [`deploy/README.md`](deploy/README.md)。
 
 ```bash
-# 构建与本地容器验证（可选）
-docker compose build
-docker compose up -d
-
-# 服务器首次部署 / 手动触发
-/srv/atelier/scripts/auto-deploy.sh
+# 上线
+git push origin main
 ```
 
 生产注意事项：
@@ -180,6 +179,7 @@ docker compose up -d
 - 对外提供服务时使用域名 + HTTPS 反向代理；中国大陆服务器需完成 ICP 备案。
 - 首次部署前在服务器 `/srv/atelier/.env` 设置管理员密码、初始邀请码和 `SITE_URL`。
 - 域名和 HTTPS 就绪后，将 `BIND_ADDRESS` 改为 `127.0.0.1`、`COOKIE_SECURE` 改为 `true`。
+- 只给可信成员仓库 Write 权限；外部贡献者使用 fork PR，不会拿到部署密钥。
 - 目前没有邮件服务；成员忘记密码时需要馆员协助重置。
 
 ## 已验证流程

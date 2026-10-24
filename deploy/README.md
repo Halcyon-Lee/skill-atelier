@@ -1,106 +1,129 @@
-# ATELIER server deployment
+# ATELIER deployment
 
-Current deployment model: **pull-based deployment from GitHub**.
+## Current model: GitHub Actions
 
 ```text
-GitHub main
-   │  api.github.com (commit check, ETag)
-   │  codeload.github.com (source tarball)
-   ▼
-/srv/atelier
-   ├─ auto-deploy timer (every 2 min)
-   ├─ Docker image atelier:<commit>
-   ├─ docker compose -> app on 127.0.0.1:3000
-   ├─ ./data/atelier.db   (persistent SQLite)
-   └─ ./backups/*.db      (daily + pre-deploy)
+push / merge to main
+        │
+        ▼
+GitHub Actions
+  ├─ Verify: npm ci + lint + typecheck + build
+  ├─ Build & push image to ghcr.io/halcyon-lee/skill-atelier:<sha>
+  └─ SSH deploy using a restricted key
+        │
+        ▼
+Tencent Cloud server
+  ├─ /usr/local/sbin/atelier-ci-deploy (forced command)
+  ├─ docker login to GHCR with the job's short-lived token
+  ├─ docker compose -> app on 0.0.0.0:3000
+  ├─ /srv/atelier/data/atelier.db
+  └─ /srv/atelier/backups/*.db
 ```
 
-This avoids storing SSH deployment secrets in GitHub and works on servers whose
-network can reach `api.github.com` and `codeload.github.com` but not `github.com`.
+A failing `Verify` prevents deployment. The server-side deploy receiver checks
+`/api/health` and rolls back to the previous image if the new version is unhealthy.
 
-## Server prerequisites
+The old server-side polling deployment is kept as a fallback but its timer is disabled.
 
-- Linux x86_64, Docker Engine + Compose plugin
-- `curl`, `jq`, `sqlite3`, `tar`, `flock`
-- `/srv/atelier` with at least a few GB of free disk
+## Repository requirements
 
-Docker Hub is not directly reachable from this environment; the daemon is configured
-with the Tencent Cloud registry mirror:
+The repository has one required secret:
 
-```json
-{ "registry-mirrors": ["https://mirror.ccs.tencentyun.com"] }
+| Secret | Purpose |
+| --- | --- |
+| `DEPLOY_SSH_KEY` | Private key for the restricted deploy account |
+
+The private key is generated outside the repository. On the developer machine it
+lives at `~/.ssh/atelier_ci`; the corresponding public key is installed on the
+server with this forced command:
+
+```text
+restrict,command="/usr/local/sbin/atelier-ci-deploy" ssh-ed25519 ... atelier-github-actions
 ```
 
-## Initial setup
+The key cannot open a shell. It can only ask the server to deploy a full commit SHA.
 
-1. Create directories and copy the deployment files:
+The known host key is pinned in [`known_hosts`](known_hosts). If the server is
+rebuilt, update that file with:
 
 ```bash
-mkdir -p /srv/atelier/{scripts,data,backups}
-chown 1001:1001 /srv/atelier/data
-chmod 700 /srv/atelier/backups
-install -m 755 deploy/auto-deploy.sh /srv/atelier/scripts/auto-deploy.sh
-install -m 755 deploy/backup.sh /srv/atelier/scripts/backup.sh
-install -m 644 docker-compose.yml /srv/atelier/docker-compose.yml
+ssh-keyscan -t ed25519 <server-ip> > deploy/known_hosts
 ```
 
-2. Create `/srv/atelier/.env` with mode `600`. Required values:
+## Server requirements
 
-```dotenv
-APP_IMAGE=atelier:pending
-BIND_ADDRESS=127.0.0.1
-TZ=Asia/Shanghai
-ADMIN_EMAIL=you@example.com
-ADMIN_PASSWORD=change-me-to-a-strong-password
-SEED_INVITE_CODE=YOUR-INVITE-CODE
-SITE_URL=https://your-domain.example
-COOKIE_SECURE=true
-DATABASE_PATH=/data/atelier.db
-NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=stable-32-byte-base64-key
+- Linux x86_64
+- Docker Engine + Compose plugin
+- `curl`, `sqlite3`, `flock`
+- `/srv/atelier` with several GB free
+- SSH port reachable from GitHub Actions runners
+
+Docker Hub is not directly reachable from this server; Docker is configured with
+the Tencent Cloud registry mirror. GHCR is reachable directly.
+
+## Server layout
+
+```text
+/srv/atelier/
+├── .env                 # secrets, mode 600, never committed
+├── docker-compose.yml
+├── data/atelier.db      # persistent
+├── backups/             # daily + pre-deploy snapshots
+├── scripts/
+│   ├── auto-deploy.sh   # legacy fallback, timer disabled
+│   └── backup.sh
+└── .deployed_sha
 ```
 
-3. Install systemd units:
+The CI receiver is installed at:
 
-```bash
-install -m 644 deploy/atelier-deploy.service /etc/systemd/system/
-install -m 644 deploy/atelier-deploy.timer /etc/systemd/system/
-install -m 644 deploy/atelier-backup.service /etc/systemd/system/
-install -m 644 deploy/atelier-backup.timer /etc/systemd/system/
-systemctl daemon-reload
-systemctl enable --now atelier-deploy.timer atelier-backup.timer
+```text
+/usr/local/sbin/atelier-ci-deploy
 ```
-
-4. Trigger the first deployment:
-
-```bash
-/srv/atelier/scripts/auto-deploy.sh
-```
-
-The first request to `/api/health` creates and seeds the SQLite database.
 
 ## Operations
 
 ```bash
-# Manual deploy check
-/srv/atelier/scripts/auto-deploy.sh
+# Deploy: push or merge to main
+git push origin main
 
-# Logs
+# Re-run the latest workflow from GitHub Actions UI
+# Actions -> CI/CD -> Run workflow
+
+# Application logs
 cd /srv/atelier && docker compose logs -f app
-journalctl -u atelier-deploy.service -n 100 --no-pager
-systemctl list-timers 'atelier-*'
 
-# Restart
-cd /srv/atelier && docker compose restart app
+# Current deployment
+cat /srv/atelier/.deployed_sha
+grep '^APP_IMAGE=' /srv/atelier/.env
+docker ps --filter name=atelier-app
 
-# Backup now
+# Health
+curl -fsS http://127.0.0.1:3000/api/health
+
+# Manual backup
 /srv/atelier/scripts/backup.sh
 
-# Retry the last failed commit
-rm -f /srv/atelier/.failed_sha
-/srv/atelier/scripts/auto-deploy.sh
+# Backup timer
+systemctl list-timers 'atelier-*'
 ```
 
-## Restore a backup
+If a deploy fails health checks, the receiver automatically re-creates the
+previous image. Inspect Actions logs and `/srv/atelier/backups/`.
+
+## Roll back manually
+
+The previous image is still present locally. Set it explicitly:
+
+```bash
+cd /srv/atelier
+PREVIOUS=$(docker images 'ghcr.io/halcyon-lee/skill-atelier' --format '{{.Repository}}:{{.Tag}}' | grep -v latest | head -2 | tail -1)
+sed -i "s|^APP_IMAGE=.*|APP_IMAGE=$PREVIOUS|" .env
+docker compose up -d --no-build
+curl -fsS http://127.0.0.1:3000/api/health
+```
+
+## Restore a database backup
 
 ```bash
 cd /srv/atelier
@@ -111,6 +134,25 @@ docker compose start app
 ```
 
 Always stop the application before replacing the database file.
+
+## Legacy fallback
+
+The original pull-based deployment still exists on the server and builds locally
+from a GitHub source tarball:
+
+```bash
+# Enable fallback polling (only if GitHub Actions cannot reach the server)
+systemctl enable --now atelier-deploy.timer
+
+# Manually deploy the latest main
+/srv/atelier/scripts/auto-deploy.sh
+
+# Disable fallback again once Actions is healthy
+systemctl disable --now atelier-deploy.timer
+```
+
+Do not run the poller and Actions at the same time; both use the same deployment
+lock, but the fallback should remain disabled during normal operation.
 
 ## Domain + HTTPS later
 
@@ -128,7 +170,9 @@ For the temporary direct-IP phase the app binds `0.0.0.0:3000` and
 
 - The app is intentionally a single instance. SQLite is not designed for multiple
   writers across multiple hosts.
-- Builds happen on the server. Keep at least 2 GB of free memory or add swap.
-- Keep `.env` out of the repository and never bake it into the image.
-- Deployment scripts are server-managed copies. If you change them in the repo,
-  reinstall them with `install` as shown above.
+- Repository secrets are available to workflows in this repository. Give write
+  access only to trusted collaborators; external contributors should use fork PRs.
+- Direct pushes to `main` deploy automatically. If you want to prevent broken
+  builds from entering `main`, protect the branch with a required `Verify` check
+  (PR with 0 required approvals is enough).
+- Keep `.env` out of the repository and never bake it into the Docker image.
