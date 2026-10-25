@@ -22,15 +22,15 @@ export default function NotFound() {
               暂时找不到<span className="text-accent">。</span>
             </h1>
             <p className="mt-6 max-w-[420px] text-[14px] leading-[1.85] text-muted">
-              这个风格或作品可能已被移除。回到首页，寻找下一个值得讲述的故事。
+              这个作品可能已被移除。回到首页，看看其他视频。
             </p>
             <div className="mt-8 flex flex-wrap gap-2.5">
               <Link href="/" className="btn btn-primary btn-sm">
                 <ArrowLeft size={13} />
                 返回首页
               </Link>
-              <Link href="/works" className="btn btn-outline btn-sm">
-                我的作品
+              <Link href="/" className="btn btn-outline btn-sm">
+                全部作品
                 <ArrowUpRight size={13} />
               </Link>
             </div>

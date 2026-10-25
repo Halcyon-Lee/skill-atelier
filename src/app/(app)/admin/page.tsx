@@ -203,6 +203,9 @@ export default async function AdminPage({
       <nav aria-label="馆务台导航" className="sticky top-[76px] z-30 border-y border-line bg-paper/95 backdrop-blur-md">
         <div className="shell flex h-12 items-center justify-between">
           <div className="flex items-center gap-5">
+            <Link href="/admin/gallery" className="text-[12px] text-accent transition-colors hover:text-ink">
+              视频管理
+            </Link>
             <a href="#invites" className="text-[12px] text-muted transition-colors hover:text-ink">
               邀请函
             </a>

@@ -36,10 +36,17 @@ function validateName(name: string): string | null {
   return null;
 }
 
+// New members register with an invite code. Set REGISTRATION_OPEN=false to pause sign-ups.
+const REGISTRATION_CLOSED = "暂不开放注册。";
+function registrationOpen() {
+  return process.env.REGISTRATION_OPEN !== "false";
+}
+
 export async function checkInviteAction(
   _state: AuthFormState,
   formData: FormData,
 ): Promise<AuthFormState> {
+  if (!registrationOpen()) return { error: REGISTRATION_CLOSED };
   const code = normalizeInviteCode(stringValue(formData, "code"));
   const ip = await requestIp();
   const limit = consumeRateLimit(`invite:${ip}`, 30, 600);
@@ -96,6 +103,7 @@ export async function registerAction(
   _state: AuthFormState,
   formData: FormData,
 ): Promise<AuthFormState> {
+  if (!registrationOpen()) return { error: REGISTRATION_CLOSED };
   const code = normalizeInviteCode(stringValue(formData, "code"));
   const name = stringValue(formData, "name");
   const email = stringValue(formData, "email").toLowerCase();

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Film, Plus, ArrowUpRight, LogOut } from "lucide-react";
+import { Film, ArrowUpRight, LogOut } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { logoutAction } from "@/actions/auth";
 import { Avatar,Logo } from "@/components/brand";
@@ -9,9 +9,10 @@ export async function VideoHeader() {
     <div className="shell flex min-h-20 flex-wrap items-center justify-between gap-x-5 gap-y-3 py-4">
       <Logo href="/" />
       <nav aria-label="主导航" className="order-3 flex w-full items-center gap-6 border-t border-line pt-3 text-sm sm:order-none sm:w-auto sm:border-0 sm:pt-0">
-        <Link href="/#styles" className="text-ink hover:text-accent">发现风格</Link>
-        <Link href="/works" className="text-muted hover:text-accent">我的作品</Link>
-        <Link href="/favorites" className="text-muted hover:text-accent">收藏</Link>
+        <Link href="/" className="text-ink hover:text-accent">公开首页</Link>
+        <Link href="/admin/gallery" className="text-muted hover:text-accent">视频管理</Link>
+        <Link href="/styles/swiss-motion" className="text-muted hover:text-accent">内部创作</Link>
+        <Link href="/library" className="text-muted hover:text-accent">Skill 档案</Link>
       </nav>
       <div className="flex items-center gap-3">
         {user ? <>
@@ -19,7 +20,6 @@ export async function VideoHeader() {
           <Link href="/profile" className="flex items-center gap-2" title={user.name}><Avatar name={user.name} color={user.avatarColor} /><span className="hidden max-w-36 truncate text-xs text-muted xl:block">{user.name}</span></Link>
           <form action={logoutAction}><button aria-label="退出登录" className="flex size-10 items-center justify-center text-faint hover:text-ink"><LogOut size={17}/></button></form>
         </> : <Link href="/login" className="btn btn-outline btn-sm">登录 / 加入<ArrowUpRight size={14}/></Link>}
-        <Link href="/styles/swiss-motion" className="btn btn-primary btn-sm hidden md:inline-flex"><Plus size={15}/>开始创作</Link>
       </div>
     </div>
   </header>;

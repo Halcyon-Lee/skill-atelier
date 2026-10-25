@@ -6,6 +6,7 @@ import { DatabaseSync } from "node:sqlite";
 import { seedDatabase } from "@/lib/seed-data";
 import { migrateShowcase } from "@/lib/showcase-migration";
 import { migrateVideo } from "@/lib/video/migration";
+import { migrateGallery } from "@/lib/gallery/model";
 
 const SCHEMA = `
   PRAGMA journal_mode = WAL;
@@ -91,6 +92,7 @@ function createDatabase(): DatabaseSync {
   database.exec(SCHEMA);
   migrateShowcase(database);
   migrateVideo(database);
+  migrateGallery(database);
   seedDatabase(database);
   return database;
 }
@@ -99,6 +101,7 @@ const globalForDatabase = globalThis as typeof globalThis & {
   __atelierDatabase?: DatabaseSync;
   __atelierShowcaseVersion?: number;
   __atelierVideoVersion?: number;
+  __atelierGalleryVersion?: number;
 };
 
 export function getDb(): DatabaseSync {
@@ -113,6 +116,10 @@ export function getDb(): DatabaseSync {
   if (globalForDatabase.__atelierVideoVersion !== 2) {
     migrateVideo(globalForDatabase.__atelierDatabase);
     globalForDatabase.__atelierVideoVersion = 2;
+  }
+  if (globalForDatabase.__atelierGalleryVersion !== 2) {
+    migrateGallery(globalForDatabase.__atelierDatabase);
+    globalForDatabase.__atelierGalleryVersion = 2;
   }
   return globalForDatabase.__atelierDatabase;
 }

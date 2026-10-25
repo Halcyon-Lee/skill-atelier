@@ -4,13 +4,16 @@ import { consumeRateLimit } from "@/lib/rate-limit";
 import { getVideoStyle } from "@/lib/video/catalog";
 import { enqueueJob, findJob } from "@/lib/video/jobs";
 import { jobOptions,parseVideoOptions } from "@/lib/video/options";
-import { getVideoJobs, getVideoRuntime, publicJob, sameOrigin } from "@/lib/video/server";
+import { getActiveJob, getVideoRuntime, publicJob, sameOrigin } from "@/lib/video/server";
+import { isAdmin } from "@/lib/gallery/server";
 export async function GET() {
+  if (!(await isAdmin())) return new Response(null, { status: 404 }); // internal-only since the showcase pivot
   const user=await getSessionUser();
   if(!user) return Response.json({error:"请先登录。"},{status:401});
-  return Response.json({jobs:getVideoJobs(user.id).map(publicJob),runtime:getVideoRuntime()},{headers:{"Cache-Control":"private, no-store"}});
+  return Response.json({activeJob:getActiveJob(user.id),runtime:getVideoRuntime()},{headers:{"Cache-Control":"private, no-store"}});
 }
 export async function POST(request: Request) {
+  if (!(await isAdmin())) return new Response(null, { status: 404 }); // internal-only since the showcase pivot
   const user=await getSessionUser();
   if(!user) return Response.json({error:"请先登录。"},{status:401});
   if(!sameOrigin(request)) return Response.json({error:"请求来源无效。"},{status:403});

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { getVideoStyle } from "@/lib/video/catalog";
-import { getFavoriteStyles,getVideoRuntime } from "@/lib/video/server";
+import { getActiveJob,getFavoriteStyles,getVideoRuntime } from "@/lib/video/server";
 import { CreateVideoForm } from "@/components/video/create-form";
 import { FavoriteButton } from "@/components/video/style-gallery";
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata> { const style=getVideoStyle((await params).slug);return {title:style?`${style.name} · 视频创作`:"风格不存在"}; }
@@ -21,7 +21,7 @@ export default async function StylePage({params}:{params:Promise<{slug:string}>}
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-xs text-faint"><span>由 {style.collectedBy} 精选 · 原作 {style.credit}</span><a href={style.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-1.5 text-muted hover:text-accent">查看原作与风格说明<ExternalLink size={12}/></a></div>
         <p className="mt-2 text-[11px] leading-relaxed text-faint">样片用于参考画风。新影片会根据你的脚本重新制作，具体构图和节奏随内容变化。</p>
       </div>
-      <div className="lg:sticky lg:top-28"><CreateVideoForm style={style} loggedIn={!!user} initialRuntime={getVideoRuntime()}/></div>
+      <div className="lg:sticky lg:top-28"><CreateVideoForm style={style} loggedIn={!!user} initialRuntime={getVideoRuntime()} initialActiveJob={getActiveJob(user?.id)}/></div>
     </div>
   </div>;
 }

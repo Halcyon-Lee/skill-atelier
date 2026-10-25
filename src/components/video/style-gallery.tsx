@@ -32,7 +32,7 @@ export function StyleCard({style,index=0,favorite=false,loggedIn=false}:{style:V
       <div className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/55 px-3 py-1 text-[11px] text-white backdrop-blur">{style.category}</div>
       <div className="absolute right-3 top-3"><FavoriteButton slug={style.slug} initial={favorite} loggedIn={loggedIn}/></div>
     </div>
-    <div className="px-0.5 pb-4 pt-4"><Link href={`/styles/${style.slug}`} className="flex items-center justify-between gap-3"><h3 className="text-xl font-medium tracking-tight text-ink group-hover:text-accent">{style.name}</h3><ArrowUpRight size={19} className="text-faint group-hover:text-accent"/></Link>
+    <div className="px-0.5 pb-4 pt-4"><Link href={`/styles/${style.slug}`} className="flex items-center justify-between gap-3"><h3 className="flex items-center gap-2.5 text-xl font-medium tracking-tight text-ink group-hover:text-accent">{style.name}<span className={`rounded-full border px-2 py-0.5 text-[10px] font-normal tracking-normal ${style.renderer?"border-accent/40 text-accent":"border-line text-faint"}`}>{style.renderer?"可生成":"即将开放"}</span></h3><ArrowUpRight size={19} className="text-faint group-hover:text-accent"/></Link>
     <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-faint">{style.english}</p>
     <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted">{style.description}</p>
     <div className="mt-4 flex flex-wrap gap-2">{style.uses.map(use=><span key={use} className="rounded border border-line px-2 py-0.5 text-[11px] text-faint">{use}</span>)}</div>
@@ -42,7 +42,7 @@ export function StyleCard({style,index=0,favorite=false,loggedIn=false}:{style:V
 export function StyleGallery({styles,favorites=[],loggedIn=false}:{styles:VideoStyle[];favorites?:string[];loggedIn?:boolean}) {
   const [category,setCategory]=useState("全部风格"),[query,setQuery]=useState("");
   const categories=["全部风格",...new Set(styles.map(s=>s.category))];
-  const visible=styles.filter(style=>(category==="全部风格"||style.category===category)&&`${style.name} ${style.english} ${style.uses.join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
+  const visible=[...styles].sort((a,b)=>Number(!!b.renderer)-Number(!!a.renderer)).filter(style=>(category==="全部风格"||style.category===category)&&`${style.name} ${style.english} ${style.uses.join(" ")}`.toLowerCase().includes(query.trim().toLowerCase()));
   return <>
     <div className="mb-8 flex flex-wrap items-center justify-between gap-5 border-b border-line pb-6">
       <div className="flex max-w-full gap-2 overflow-x-auto pb-1" role="group" aria-label="风格分类">{categories.map(item=><button key={item} type="button" aria-pressed={category===item} onClick={()=>setCategory(item)} className={`min-h-10 shrink-0 rounded-full border px-4 text-xs transition-colors ${category===item?"border-accent bg-accent text-on-accent":"border-line text-muted hover:border-line-strong"}`}>{item}</button>)}</div>

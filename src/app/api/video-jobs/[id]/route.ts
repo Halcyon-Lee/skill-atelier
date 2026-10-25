@@ -2,7 +2,9 @@ import { getSessionUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { findJob } from "@/lib/video/jobs";
 import { getVideoRuntime, publicJob } from "@/lib/video/server";
+import { isAdmin } from "@/lib/gallery/server";
 export async function GET(_request: Request,{params}:{params:Promise<{id:string}>}) {
+  if (!(await isAdmin())) return new Response(null, { status: 404 }); // internal-only since the showcase pivot
   const user=await getSessionUser();
   if(!user) return Response.json({error:"请先登录。"},{status:401});
   const {id}=await params,job=findJob(getDb(),id);

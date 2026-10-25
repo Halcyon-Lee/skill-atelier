@@ -6,7 +6,7 @@ import { getSessionUser } from "@/lib/auth";
 import { safeReturnTo } from "@/lib/video/types";
 
 export const metadata: Metadata = {
-  title: "成员登录",
+  title: "登录",
 };
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {

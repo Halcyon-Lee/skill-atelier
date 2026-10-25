@@ -29,7 +29,7 @@ export function Logo({
   return (
     <Link
       href={href}
-      aria-label="ATELIER 视频创作"
+      aria-label="ATELIER 首页"
       className="group inline-flex items-center gap-2.5 rounded-sm"
     >
       <span
@@ -59,7 +59,7 @@ export function Logo({
               inverted ? "text-muted" : "text-faint",
             )}
           >
-            AI Video Studio
+            视频案例库
           </span>
         )}
       </span>

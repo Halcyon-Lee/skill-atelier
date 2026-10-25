@@ -7,24 +7,24 @@ import { ToastProvider } from "@/components/ui/toast";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
   title: {
-    default: "ATELIER · AI 视频创作",
+    default: "ATELIER · AI 视频作品",
     template: "%s · ATELIER",
   },
   description:
-    "选一种喜欢的视频风格，写下你的脚本，让想法成为影片。",
+    "用 skill 和 AI 做出来的视频，以及它们在抖音的真实表现。",
   applicationName: "ATELIER",
   authors: [{ name: "ATELIER" }],
   openGraph: {
-    title: "ATELIER · AI 视频创作",
-    description: "精选视频风格，用自己的脚本创作属于你的影片。",
+    title: "ATELIER · AI 视频作品",
+    description: "用 skill 和 AI 做出来的视频，以及它们在抖音的真实表现。",
     type: "website",
     locale: "zh_CN",
     siteName: "ATELIER",
   },
   twitter: {
     card: "summary",
-    title: "ATELIER · AI 视频创作",
-    description: "精选视频风格，用自己的脚本创作属于你的影片。",
+    title: "ATELIER · AI 视频作品",
+    description: "用 skill 和 AI 做出来的视频，以及它们在抖音的真实表现。",
   },
   robots: {
     index: false,

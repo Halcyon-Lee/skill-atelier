@@ -24,16 +24,16 @@ export function JoinForm({
     <div>
       <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-moss/25 bg-moss/[0.07] px-3 py-1.5">
         <Check size={12} strokeWidth={2.5} className="text-moss" />
-        <span className="eyebrow text-moss">Invitation verified</span>
+        <span className="eyebrow text-moss">邀请码已验证</span>
       </div>
 
-      <h1 className="display-cn text-[44px] text-ink sm:text-[50px]">门为你开着。</h1>
+      <h1 className="text-[28px] font-medium tracking-tight text-ink sm:text-[32px]">创建账号</h1>
       <p className="mt-4 max-w-[340px] text-[14px] leading-[1.8] text-muted">
-        邀请已确认。完成注册，开始创作你的第一支影片。
+        填写下面的信息完成注册，之后用邮箱和密码登录。
       </p>
 
       <div className="my-6 flex items-center justify-between gap-4 border-y border-line py-3">
-        <span className="micro text-faint">Invited by</span>
+        <span className="micro text-faint">邀请人</span>
         <span className="text-[14px] font-medium text-ink">{inviterName}</span>
         <span className="h-3 w-px bg-line" />
         <span className="input-code font-mono text-[12px] text-muted">{code}</span>
@@ -149,11 +149,11 @@ export function JoinForm({
           {pending ? (
             <>
               <LoaderCircle size={15} className="animate-spin" />
-              正在为你开门
+              正在注册
             </>
           ) : (
             <>
-              创建账号并进入
+              注册并进入
               <ArrowRight
                 size={16}
                 className="transition-transform duration-200 group-hover:translate-x-0.5"
@@ -161,10 +161,6 @@ export function JoinForm({
             </>
           )}
         </button>
-
-        <p className="text-center text-[12px] leading-relaxed text-faint">
-          请使用你有权使用的脚本和素材，尊重每一位创作者。
-        </p>
       </form>
 
       <p className="mt-5 border-t border-line pt-5 text-[14px] text-muted">

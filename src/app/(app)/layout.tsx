@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { requireUser } from "@/lib/auth";
+import { requireAdminOr404 } from "@/lib/gallery/server";
 import { VideoFooter } from "@/components/video/shell";
 import { VideoHeader } from "@/components/video/shell";
 
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  await requireUser();
+  // The skill archive and admin tools are internal now; members and visitors get a 404.
+  await requireAdminOr404();
 
   return (
     <div className="flex min-h-dvh flex-col">

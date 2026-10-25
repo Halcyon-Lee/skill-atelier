@@ -14,7 +14,7 @@ export function InviteGateForm({ initialCode = "", returnTo = "/" }: { initialCo
       <input type="hidden" name="next" value={returnTo} />
       <div>
         <label htmlFor="invite-code" className="field-label">
-          <span>邀请码 · Invitation code</span>
+          <span>邀请码</span>
           <span className="normal-case tracking-normal text-faint">必填</span>
         </label>
         <input
@@ -63,7 +63,7 @@ export function InviteGateForm({ initialCode = "", returnTo = "/" }: { initialCo
       </button>
 
       <p id="invite-help" className="pt-0.5 text-center text-[12px] leading-relaxed text-faint">
-        邀请码由一位已加入的成员提供。
+        没有邀请码？请联系我们获取。
       </p>
     </form>
   );

@@ -3,10 +3,12 @@ import path from "node:path";
 import { getSessionUser } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { screenshotDirectory } from "@/lib/screenshots";
+import { isAdmin } from "@/lib/gallery/server";
 
 export const runtime = "nodejs";
 
 export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
+  if (!(await isAdmin())) return new Response(null, { status: 404 }); // internal-only since the showcase pivot
   if (!(await getSessionUser())) return new Response("请先登录。", { status: 401 });
   const { id } = await context.params;
   if (!/^\d+$/.test(id)) return new Response("未找到截图。", { status: 404 });

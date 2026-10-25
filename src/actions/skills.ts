@@ -97,6 +97,7 @@ export async function updateSkillAction(_state: SkillFormState, formData: FormDa
 async function persistSkill(formData: FormData, editing: boolean): Promise<SkillFormState> {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  if (user.role !== "admin") return { error: "技能档案目前只对管理员开放。" };
   const original = editing ? getSkillBySlug(String(formData.get("slug") ?? "").trim(), user.id) : null;
   if (editing && !original) return { error: "没有找到这份技能档案。" };
   if (original && original.author.id !== user.id && user.role !== "admin") {
@@ -167,6 +168,7 @@ async function persistSkill(formData: FormData, editing: boolean): Promise<Skill
 export async function deleteSkillAction(formData: FormData): Promise<void> {
   const user = await getSessionUser();
   if (!user) redirect("/login");
+  if (user.role !== "admin") redirect("/");
 
   const slug = String(formData.get("slug") ?? "").trim();
   const skill = getSkillBySlug(slug, user.id);

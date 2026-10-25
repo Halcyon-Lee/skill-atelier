@@ -14,13 +14,9 @@ export function LoginForm({ returnTo = "/" }: { returnTo?: string }) {
   return (
     <div>
       <div className="mb-8">
-        <div className="mb-5 flex items-center gap-2.5">
-          <span className="size-[5px] rounded-full bg-accent" />
-          <span className="eyebrow text-muted">MEMBER ACCESS</span>
-        </div>
-        <h1 className="display-cn text-[36px] text-ink sm:text-[42px]">欢迎回来。</h1>
-        <p className="mt-4 text-base leading-[1.8] text-muted">
-          登录 ATELIER，把你的下一个想法变成影片。
+        <h1 className="text-[28px] font-medium tracking-tight text-ink sm:text-[32px]">登录</h1>
+        <p className="mt-3 text-base leading-[1.8] text-muted">
+          登录后查看全部视频案例。
         </p>
       </div>
 
@@ -74,7 +70,7 @@ export function LoginForm({ returnTo = "/" }: { returnTo?: string }) {
             </>
           ) : (
             <>
-              登录并继续
+              登录
               <ArrowRight
                 size={16}
                 className="transition-transform duration-200 group-hover:translate-x-0.5"
@@ -86,13 +82,13 @@ export function LoginForm({ returnTo = "/" }: { returnTo?: string }) {
 
       <div className="mt-8 border-t border-line pt-5">
         <p className="text-[14px] leading-relaxed text-muted">
-          还没有账号？输入邀请码即可加入社区。{" "}
+          还没有账号？{" "}
           <Link href={`/join?next=${encodeURIComponent(returnTo)}`} className="link-underline text-ink">
-            使用邀请码加入
+            使用邀请码注册
           </Link>
         </p>
         <p className="mt-2.5 text-[12px] leading-relaxed text-faint">
-          忘记密码？请联系社区管理员协助重置。
+          忘记密码？请联系管理员重置。
         </p>
       </div>
     </div>

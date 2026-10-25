@@ -4,8 +4,10 @@ import { runtimeStatus } from "./jobs";
 import type { VideoJob } from "./types";
 import { jobOptions } from "./options";
 export function getVideoRuntime() { return runtimeStatus(getDb()); }
-export function getVideoJobs(userId: number) {
-  return getDb().prepare("SELECT * FROM video_jobs WHERE user_id=? ORDER BY created_at DESC,id DESC LIMIT 50").all(userId) as VideoJob[];
+export type ActiveJob = { id: string; title: string; status: string };
+export function getActiveJob(userId?: number) {
+  if(!userId) return null;
+  return (getDb().prepare("SELECT id,title,status FROM video_jobs WHERE user_id=? AND status IN ('queued','planning','rendering','compositing')").get(userId) as ActiveJob | undefined) ?? null;
 }
 export function getFavoriteStyles(userId?: number) {
   if(!userId) return [];

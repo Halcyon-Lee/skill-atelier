@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
 import { getCategory } from "@/lib/categories";
 import { getDb } from "@/lib/db";
+import { isAdmin } from "@/lib/gallery/server";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
+  if (!(await isAdmin())) return new Response(null, { status: 404 }); // internal-only since the showcase pivot
   const user = await getSessionUser();
   if (!user) {
     return NextResponse.json({ error: "请先登录。" }, { status: 401 });

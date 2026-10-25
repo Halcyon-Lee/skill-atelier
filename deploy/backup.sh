@@ -30,6 +30,12 @@ if [ "$integrity" != "ok" ]; then
   exit 1
 fi
 
+# Showcase films, covers and data screenshots live next to the database, so archive them too.
+if [ -d "$APP_DIR/data/showcase" ]; then
+  tar -C "$APP_DIR/data" -czf "$BACKUP_DIR/showcase-$timestamp.tar.gz" showcase
+  chmod 600 "$BACKUP_DIR/showcase-$timestamp.tar.gz"
+fi
+
 # Daily backups are retained for 14 days. Pre-deploy backups follow the same rule.
-find "$BACKUP_DIR" -maxdepth 1 -type f -name '*.db' -mtime +14 -delete
+find "$BACKUP_DIR" -maxdepth 1 -type f \( -name '*.db' -o -name 'showcase-*.tar.gz' \) -mtime +14 -delete
 echo "Backup written: $destination"

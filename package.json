@@ -12,7 +12,8 @@
     "catalog:import": "node --experimental-strip-types scripts/import-github-catalog.mjs",
     "db:reset": "node scripts/reset-db.mjs",
     "video:worker": "node --experimental-strip-types scripts/video-worker.mjs",
-    "video:sync": "python3 scripts/sync-video-catalog.py --previews"
+    "video:sync": "python3 scripts/sync-video-catalog.py --previews",
+    "showcase:import-lemolab": "node --experimental-strip-types scripts/import-lemolab-showcase.mjs"
   },
   "dependencies": {
     "@fontsource/instrument-serif": "^5.3.0",

@@ -26,7 +26,7 @@ export function enqueueJob(db: DatabaseSync, userId: number, style: VideoStyle, 
       db.exec("COMMIT"); return existing;
     }
     const active = db.prepare("SELECT id FROM video_jobs WHERE user_id=? AND status IN ('queued','planning','rendering','compositing')").get(userId) as { id: string } | undefined;
-    if (active) throw new Error("你已有一项正在制作的任务，请先到「我的作品」查看。");
+    if (active) throw new Error("你已有一项正在制作的任务，完成后再提交新的。");
     if (retryOf) {
       const prior = findJob(db, retryOf);
       if (!prior || prior.user_id !== userId || prior.status !== "failed" || prior.script !== script || prior.style_slug !== style.slug || JSON.stringify(jobOptions(prior)) !== optionsJson) throw new Error("只能重试自己制作失败的任务。");
